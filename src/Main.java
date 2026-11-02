@@ -61,7 +61,7 @@ public class Main {
                 case 1:
                     System.out.println("===== CADASTRAR RECEITA =====");
 
-                    sc.nextLine();  //  para consumir o enter pendente
+                    sc.nextLine();
 
                     System.out.print("Descrição da receita: ");
                     String descricao = sc.nextLine();
@@ -104,7 +104,7 @@ public class Main {
                 case 2:
                     System.out.println("===== CADASTRAR DESPESA =====");
 
-                    sc.nextLine();  //  para consumir o enter pendente
+                    sc.nextLine();
 
                     System.out.print("Descrição da despesa: ");
                     String descricaoDespesa = sc.nextLine();
