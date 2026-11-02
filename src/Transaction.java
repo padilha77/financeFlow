@@ -6,13 +6,13 @@ public class Transaction {
     private String description;
     private BigDecimal amount;
     private LocalDate date;
-    private String type;
+    private TransactionType type;
 
     // construtor
     public Transaction(String description,
                        LocalDate date,
                        BigDecimal amount,
-                       String type) {
+                       TransactionType type) {
 
         this.description = description;
         this.date = date;
@@ -42,10 +42,10 @@ public class Transaction {
         this.date = date;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 

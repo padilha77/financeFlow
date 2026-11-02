@@ -11,20 +11,21 @@ public class Main {
                 LocalDate.now(),
 
                 new BigDecimal("150.00"),
-                "Despesa"
+                TransactionType.DESPESA
         );
         Transaction contaLuz = new Transaction(
                 "Conta de Luz",
                 LocalDate.now(),
 
                 new BigDecimal("150.00"),
-                "Despesa"
+                TransactionType.DESPESA
 
         );
         Transaction salario = new Transaction(
                 "Salario",
                 LocalDate.now(),
-                new BigDecimal("3000.00"), "Receita"
+                new BigDecimal("3000.00"),
+                TransactionType.RECEITA
         );
 
 
@@ -70,22 +71,30 @@ public class Main {
                     System.out.print("Valor da receita: ");
 
                     try {
-                        BigDecimal valor = sc.nextBigDecimal();
+
+                        String valorDigitado = sc.nextLine();
+
+                        if (valorDigitado.isBlank()) {
+                            System.out.println("Erro: O valor não pode estar vazio!");
+                            break;
+                        }
+
+                        BigDecimal valor = new BigDecimal(valorDigitado.trim());
 
                         Transaction novaReceita = new Transaction(
                                 descricao,
                                 LocalDate.now(),
                                 valor,
-                                "Receita"
+                                TransactionType.RECEITA
                         );
 
                         service.addTransaction(novaReceita);
 
                         System.out.println("Receita cadastrada com sucesso! \n");
 
-                    } catch (InputMismatchException e) {
+                    } catch (NumberFormatException e) {
                         System.out.println("Erro: Digite um valor numérico válido!");
-                        sc.nextLine(); // descarta entrada inválida
+
                     } catch (IllegalArgumentException e) {
                         System.out.println("Erro: " + e.getMessage());
                     }
@@ -105,22 +114,29 @@ public class Main {
                     System.out.print("Valor da despesa: ");
 
                     try {
-                        BigDecimal valorDespesa = sc.nextBigDecimal();
+                        String valorDigitado = sc.nextLine();
+
+                        if (valorDigitado.isBlank()) {
+                            System.out.println("Erro: O valor não pode estar vazio!");
+                            break;
+                        }
+
+                        BigDecimal valorDespesa = new BigDecimal(valorDigitado.trim());
 
                         Transaction novaDespesa = new Transaction(
                                 descricaoDespesa,
                                 LocalDate.now(),
                                 valorDespesa,
-                                "Despesa"
+                                TransactionType.DESPESA
                         );
 
                         service.addTransaction(novaDespesa);
 
                         System.out.println("Despesa cadastrada com sucesso! \n");
 
-                    } catch (InputMismatchException e) {
+                    } catch (NumberFormatException e) {
                         System.out.println("Erro: Digite um valor numérico válido!");
-                        sc.nextLine();
+
                     } catch (IllegalArgumentException e) {
                         System.out.println("Erro: " +  e.getMessage());
                     }
@@ -148,7 +164,6 @@ public class Main {
             }
         } while (opcao != 0);
         sc.close();
-
 
 
     }
