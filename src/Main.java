@@ -1,6 +1,6 @@
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -68,25 +68,28 @@ public class Main {
                     System.out.println("Descrição informada: " + descricao);
 
                     System.out.print("Valor da receita: ");
-                    BigDecimal valor = sc.nextBigDecimal();
 
-                    // criando a receita com dados digitados
+                    try {
+                        BigDecimal valor = sc.nextBigDecimal();
 
-                    Transaction novaReceita = new Transaction(
-                            descricao,
-                            LocalDate.now(),
-                            valor,
-                            "Receita"
-                    );
-                    if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-                        System.out.println("Erro, o valor deve ser maior que zero!");
-                        break;
+                        Transaction novaReceita = new Transaction(
+                                descricao,
+                                LocalDate.now(),
+                                valor,
+                                "Receita"
+                        );
+
+                        service.addTransaction(novaReceita);
+
+                        System.out.println("Receita cadastrada com sucesso! \n");
+
+                    } catch (InputMismatchException e) {
+                        System.out.println("Erro: Digite um valor numérico válido!");
+                        sc.nextLine(); // descarta entrada inválida
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Erro: " + e.getMessage());
                     }
 
-                    // agora adicinando na lista
-                    service.addTransaction(novaReceita);
-
-                    System.out.println("Receita cadastrada com sucesso! \n");
                     break;
 
                 case 2:
@@ -100,38 +103,33 @@ public class Main {
                     System.out.println("Descrição informada: " + descricaoDespesa);
 
                     System.out.print("Valor da despesa: ");
-                    BigDecimal valorDespesa = sc.nextBigDecimal();
 
-                    if (valorDespesa.compareTo(BigDecimal.ZERO) <= 0) {
-                        System.out.println("Erro, o valor deve ser maior que zero!");
-                        break;
+                    try {
+                        BigDecimal valorDespesa = sc.nextBigDecimal();
+
+                        Transaction novaDespesa = new Transaction(
+                                descricaoDespesa,
+                                LocalDate.now(),
+                                valorDespesa,
+                                "Despesa"
+                        );
+
+                        service.addTransaction(novaDespesa);
+
+                        System.out.println("Despesa cadastrada com sucesso! \n");
+
+                    } catch (InputMismatchException e) {
+                        System.out.println("Erro: Digite um valor numérico válido!");
+                        sc.nextLine();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Erro: " +  e.getMessage());
                     }
-
-                    // criando a despesa com dados digitados
-
-                    Transaction novaDespesa = new Transaction(
-                            descricaoDespesa,
-                            LocalDate.now(),
-                            valorDespesa,
-                            "Despesa"
-                    );
-
-                    service.addTransaction(novaDespesa);
-                    System.out.println("Despesa cadastrada com sucesso! \n");
 
                     break;
 
                 case 3:
-                    BigDecimal saldo = BigDecimal.ZERO;
-
-                    for (Transaction transaction : service.getTransactions()) {
-                        if (transaction.getType().equals("Receita")) {
-                            saldo = saldo.add(transaction.getAmount());
-                        } else if (transaction.getType().equals("Despesa")) {
-                            saldo = saldo.subtract(transaction.getAmount());
-                        }
-                    }
-                    System.out.println("Saldo atual: R$ " + saldo + "\n");
+                    System.out.println("Saldo atual: R$ " + service.calculateBalance());
+                    System.out.println();
                     break;
 
                 case 4:
