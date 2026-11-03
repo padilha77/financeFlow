@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import jakarta.persistence.EntityManager;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TransactionApiIT {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper mapper;
+    @Autowired EntityManager entityManager;
     @Autowired TransactionRepository repository;
 
     @Test
@@ -68,6 +72,147 @@ class TransactionApiIT {
     void deveRetornar404ParaTransacaoInexistente() throws Exception {
         mvc.perform(get("/api/transactions/9223372036854775807"))
                 .andExpect(status().isNotFound()).andExpect(jsonPath("$.status").value(404));
+    }
+
+    @Test
+    void deveEditarTransacaoMantendoIdentificador() throws Exception {
+        Transaction original = repository.saveAndFlush(
+                new Transaction(
+                        "Conta de luz",
+                        LocalDate.of(2026, 11, 3),
+                        new BigDecimal("150.00"),
+                        TransactionType.DESPESA
+                )
+        );
+
+        Long id = original.getId();
+        long totalBefore = repository.count();
+
+        mvc.perform(put("/api/transactions/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "description": "Freelance",
+                                "date": "2026-11-04",
+                                "amount": 500.00,
+                                "type": "RECEITA"
+                            }
+                            """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.description").value("Freelance"))
+                .andExpect(jsonPath("$.date").value("2026-11-04"))
+                .andExpect(jsonPath("$.amount").value(500.00))
+                .andExpect(jsonPath("$.type").value("RECEITA"));
+
+        repository.flush();
+        entityManager.clear();
+
+        Transaction updated = repository.findById(id).orElseThrow();
+
+        assertEquals("Freelance", updated.getDescription());
+        assertEquals(LocalDate.of(2026, 11, 4), updated.getDate());
+        assertEquals(new BigDecimal("500.00"), updated.getAmount());
+        assertEquals(TransactionType.RECEITA, updated.getType());
+        assertEquals(totalBefore, repository.count());
+    }
+
+    @Test
+    void deveExcluirTransacaoNoPostgres() throws Exception {
+        Transaction original = repository.saveAndFlush(
+                new Transaction(
+                        "Conta de luz",
+                        LocalDate.of(2026, 11, 3),
+                        new BigDecimal("150.00"),
+                        TransactionType.DESPESA
+                )
+        );
+
+        Long id = original.getId();
+        long totalBefore = repository.count();
+
+        mvc.perform(delete("/api/transactions/{id}", id))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+
+        repository.flush();
+        entityManager.clear();
+
+        assertTrue(repository.findById(id).isEmpty());
+        assertEquals(totalBefore - 1, repository.count());
+
+        mvc.perform(get("/api/transactions/{id}", id))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deveRetornar404AoExcluirTransacaoInexistente() throws Exception {
+        long totalBefore = repository.count();
+
+        mvc.perform(delete("/api/transactions/9223372036854775807"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404));
+
+        assertEquals(totalBefore, repository.count());
+    }
+
+    @Test
+    void deveRetornar404AoEditarTransacaoInexistente() throws Exception {
+        long totalBefore = repository.count();
+
+        mvc.perform(put("/api/transactions/9223372036854775807")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "description": "Freelance",
+                                "date": "2026-11-04",
+                                "amount": 500.00,
+                                "type": "RECEITA"
+                            }
+                            """))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404));
+
+        assertEquals(totalBefore, repository.count());
+    }
+
+    @Test
+    void deveRejeitarEdicaoInvalidaSemAlterarRegistro() throws Exception {
+        Transaction original = repository.saveAndFlush(
+                new Transaction(
+                        "Conta de luz",
+                        LocalDate.of(2026, 11, 3),
+                        new BigDecimal("150.00"),
+                        TransactionType.DESPESA
+                )
+        );
+
+        Long id = original.getId();
+        long totalBefore = repository.count();
+
+        mvc.perform(put("/api/transactions/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                            {
+                                "description": "Conta alterada",
+                                "date": "2026-11-04",
+                                "amount": -200.00,
+                                "type": "RECEITA"
+                            }
+                            """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[*].field", hasItem("amount")));
+
+        repository.flush();
+        entityManager.clear();
+
+        Transaction unchanged = repository.findById(id).orElseThrow();
+
+        assertEquals("Conta de luz", unchanged.getDescription());
+        assertEquals(LocalDate.of(2026, 11, 3), unchanged.getDate());
+        assertEquals(new BigDecimal("150.00"), unchanged.getAmount());
+        assertEquals(TransactionType.DESPESA, unchanged.getType());
+        assertEquals(totalBefore, repository.count());
     }
 
     @ParameterizedTest

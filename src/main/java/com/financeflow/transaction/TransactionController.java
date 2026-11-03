@@ -28,6 +28,25 @@ public class TransactionController {
                 .body(TransactionResponse.from(transaction));
     }
 
+    @PutMapping("/{id}")
+    public TransactionResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody TransactionRequest request) {
+
+        Transaction updated = service.updateTransaction(
+                id,
+                request.toTransaction()
+        );
+
+        return TransactionResponse.from(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deleteTransaction(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     public List<TransactionResponse> list() {
         return service.getTransactions().stream().map(TransactionResponse::from).toList();

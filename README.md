@@ -51,7 +51,8 @@ O cadastro retorna HTTP **201**, o identificador gerado e o endereço do registr
 | GET | `/api/transactions` | Lista as transações, das mais recentes para as mais antigas |
 | GET | `/api/transactions/{id}` | Consulta uma transação pelo identificador |
 | GET | `/api/transactions/balance` | Retorna o saldo: receitas menos despesas |
-
+| PUT | `/api/transactions/{id}` | Edita uma transação existente |
+| DELETE | `/api/transactions/{id}` | Exclui uma transação existente |
 ```bash
 curl http://localhost:8080/api/transactions
 curl http://localhost:8080/api/transactions/1
