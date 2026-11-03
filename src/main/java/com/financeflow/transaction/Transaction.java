@@ -35,9 +35,14 @@ public class Transaction {
         this.type = type;
     }
 
-    public Long getId() { return id; }
-    public String getDescription() { return description; }
-    public BigDecimal getAmount() { return amount; }
-    public LocalDate getDate() { return date; }
-    public TransactionType getType() { return type; }
+    public Long getId() {
+        return id; }
+    public String getDescription() {
+        return description; }
+    public BigDecimal getAmount() {
+        return amount; }
+    public LocalDate getDate() {
+        return date; }
+    public TransactionType getType() {
+        return type; }
 }

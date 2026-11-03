@@ -11,24 +11,30 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.matchesPattern;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@Transactional
+@SpringBootTest  // carrega a aplicação para o teste
+@AutoConfigureMockMvc  // permite simular requisições HTTP sem abrir outra porta de servidor
+@ActiveProfiles("test")  // carrega as configurações de application-test.properties
+@Transactional  // faz as alterações de cada teste serem revertidas ao terminar
 class TransactionApiIT {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper mapper;
     @Autowired TransactionRepository repository;
 
     @Test
-    void deveCadastrarConsultarEListarTransacaoNoPostgres() throws Exception {
+    void deveCadastrarConsultarEListarTransacaoNoPostgres()
+            throws Exception {
         String body = mvc.perform(post("/api/transactions").contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"description":" Salário ","date":"2026-11-03","amount":3000.00,"type":"RECEITA"}

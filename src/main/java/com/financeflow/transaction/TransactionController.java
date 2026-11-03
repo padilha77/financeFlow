@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -17,11 +18,14 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionResponse> create(@Valid @RequestBody TransactionRequest request) {
+    public ResponseEntity<TransactionResponse> create(
+            @Valid @RequestBody TransactionRequest request) {
         Transaction transaction = service.addTransaction(request.toTransaction());
+
         var location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(transaction.getId()).toUri();
-        return ResponseEntity.created(location).body(TransactionResponse.from(transaction));
+        return ResponseEntity.created(location)
+                .body(TransactionResponse.from(transaction));
     }
 
     @GetMapping

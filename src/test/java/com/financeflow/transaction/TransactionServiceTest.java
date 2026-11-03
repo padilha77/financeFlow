@@ -20,8 +20,12 @@ class TransactionServiceTest {
 
     @Test
     void deveAdicionarUmaTransacao() {
-        Transaction receita = transaction("Freelance", "500.00", TransactionType.RECEITA);
+        Transaction receita = transaction(
+                "Freelance",
+                "500.00",
+                TransactionType.RECEITA);
         when(repository.save(receita)).thenReturn(receita);
+
         assertSame(receita, service.addTransaction(receita));
         verify(repository).save(receita);
     }
@@ -29,28 +33,40 @@ class TransactionServiceTest {
     @Test
     void deveRejeitarTransacaoComValorNegativo() {
         assertThrows(IllegalArgumentException.class,
-                () -> service.addTransaction(transaction("Internet", "-200.00", TransactionType.DESPESA)));
+                () -> service.addTransaction(transaction(
+                        "Internet",
+                        "-200.00",
+                        TransactionType.DESPESA)));
         verifyNoInteractions(repository);
     }
 
     @Test
     void deveRejeitarTransacaoComValorZero() {
         assertThrows(IllegalArgumentException.class,
-                () -> service.addTransaction(transaction("Internet", "0.00", TransactionType.DESPESA)));
+                () -> service.addTransaction(transaction(
+                        "Internet",
+                        "0.00",
+                        TransactionType.DESPESA)));
         verifyNoInteractions(repository);
     }
 
     @Test
     void deveRejeitarTransacaoComDescricaoVazia() {
         assertThrows(IllegalArgumentException.class,
-                () -> service.addTransaction(transaction("  ", "100.00", TransactionType.DESPESA)));
+                () -> service.addTransaction(transaction(
+                        "  ",
+                        "100.00",
+                        TransactionType.DESPESA)));
         verifyNoInteractions(repository);
     }
 
     @Test
     void deveCalcularSaldoCorretamente() {
-        when(repository.totalByType(TransactionType.RECEITA)).thenReturn(new BigDecimal("3000.00"));
-        when(repository.totalByType(TransactionType.DESPESA)).thenReturn(new BigDecimal("500.00"));
+        when(repository.totalByType(TransactionType.RECEITA))
+                .thenReturn(new BigDecimal("3000.00"));
+
+        when(repository.totalByType(TransactionType.DESPESA))
+                .thenReturn(new BigDecimal("500.00"));
         assertEquals(new BigDecimal("2500.00"), service.calculateBalance());
     }
 
