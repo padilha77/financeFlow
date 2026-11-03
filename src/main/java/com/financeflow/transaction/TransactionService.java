@@ -15,8 +15,7 @@ public class TransactionService {
         this.repository = repository;
     }
 
-    @Transactional
-    public Transaction addTransaction(Transaction transaction) {
+    private void validateTransaction(Transaction transaction) {
         if (transaction == null) {
             throw new IllegalArgumentException("A transação é obrigatória!");
         }
@@ -35,9 +34,36 @@ public class TransactionService {
         }
         if (transaction.getDate() == null || transaction.getType() == null) {
             throw new IllegalArgumentException("A data e o tipo da transação são obrigatórios!");
-        }
+        }  // fecha o último if
+    }  // fecha validateTransaction
+
+    @Transactional
+    public Transaction addTransaction(Transaction transaction){
+        validateTransaction(transaction);
         return repository.save(transaction);
     }
+
+    @Transactional
+    public Transaction updateTransaction(Long id, Transaction newData){
+        Transaction existingTransaction = getTransaction(id);
+
+        validateTransaction(newData);
+
+        existingTransaction.updateDetails(
+                newData.getDescription(),
+                newData.getDate(),
+                newData.getAmount(),
+                newData.getType()
+        );
+        return repository.save(existingTransaction);
+    }
+
+    @Transactional
+    public void deleteTransaction(Long id) {
+        Transaction existingTransaction = getTransaction(id);
+        repository.delete(existingTransaction);
+    }
+
 
     public List<Transaction> getTransactions() {
         return repository.findAll(Sort.by(Sort.Direction.DESC, "date", "id"));

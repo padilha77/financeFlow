@@ -35,6 +35,18 @@ public class Transaction {
         this.type = type;
     }
 
+    public void updateDetails(
+            String description,
+            LocalDate date,
+            BigDecimal amount,
+            TransactionType type){
+
+        this.description = description;
+        this.date = date;
+        this.amount = amount;
+        this.type = type;
+    }
+
     public Long getId() {
         return id; }
     public String getDescription() {

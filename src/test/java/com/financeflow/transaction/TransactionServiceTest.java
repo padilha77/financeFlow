@@ -1,5 +1,6 @@
 package com.financeflow.transaction;
 
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.stream.Stream;
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -75,6 +77,98 @@ class TransactionServiceTest {
     void deveRejeitarDadosIncompletosOuPrecisaoInvalida(Transaction transaction) {
         assertThrows(IllegalArgumentException.class, () -> service.addTransaction(transaction));
         verifyNoInteractions(repository);
+    }
+
+    @Test
+    void deveAtualizarUmaTransacaoExixtente(){
+        Transaction existing = transaction(
+                "Conta de luz", "150.00", TransactionType.DESPESA);
+
+        Transaction newData = new Transaction(
+                "Freelance",
+                LocalDate.of(2026, 11, 4),
+                new BigDecimal("500.00"),
+                TransactionType.RECEITA
+        );
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(existing));
+
+        when(repository.save(existing))
+                .thenReturn(existing);
+
+        Transaction updated = service.updateTransaction(1L, newData);
+
+        assertSame(existing, updated);
+        assertEquals("Freelance", updated.getDescription());
+        assertEquals(LocalDate.of(2026, 11, 4), updated.getDate());
+        assertEquals(new BigDecimal("500.00"), updated.getAmount());
+        assertEquals(TransactionType.RECEITA, updated.getType());
+
+        verify(repository).save(existing);
+
+    }
+
+    @Test
+    void deveRejeitarEdicaoDetransacaoInexistente(){
+        Transaction newData =  transaction(
+                "Conta de luz", "200.00", TransactionType.DESPESA);
+
+        when(repository.findById(99L))
+            .thenReturn(Optional.empty());
+
+        assertThrows(
+                TransactionNotFoundException.class,
+                () -> service.updateTransaction(99L, newData)
+        );
+        verify(repository, never()).save(any(Transaction.class));
+    }
+
+    @Test
+    void deveRejeitarEdicaoComValorNegativo() {
+        Transaction existing = transaction(
+                "Conta de luz", "150.00", TransactionType.DESPESA);
+
+        Transaction newData = transaction(
+                "Conta de luz", "-200.00", TransactionType.DESPESA);
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(existing));
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> service.updateTransaction(1L, newData)
+        );
+
+        assertEquals(new BigDecimal("150.00"), existing.getAmount());
+
+        verify(repository, never()).save(any(Transaction.class));
+    }
+
+    @Test
+    void deveExcluirUmaTransacaoExistente() {
+        Transaction existing = transaction(
+                "Conta de luz", "150.00", TransactionType.DESPESA);
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(existing));
+
+        service.deleteTransaction(1L);
+
+        verify(repository).delete(existing);
+    }
+
+    @Test
+    void deveRejeitarExclusaoDeTransacaoInexistente() {
+        when(repository.findById(99L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                TransactionNotFoundException.class,
+                () -> service.deleteTransaction(99L)
+        );
+
+        verify(repository, never()).delete(any(Transaction.class));
     }
 
     static Stream<Transaction> invalidTransactions() {
