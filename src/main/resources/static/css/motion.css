@@ -1,0 +1,403 @@
+/* 01. Curvas e tempos compartilhados: o movimento acompanha a ação. */
+:root {
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* 02. Aurora em camadas: só transform e opacity são animados continuamente. */
+.ambient {
+  inset: -7vmax;
+  transform: translate3d(var(--ambient-x, 0px), var(--ambient-y, 0px), 0);
+  contain: strict;
+  will-change: transform;
+}
+.ambient span {
+  filter: blur(72px);
+  will-change: transform, opacity;
+  animation: aurora-mint 28s var(--ease-soft) infinite alternate;
+}
+.ambient span:nth-child(1) {
+  width: min(780px, 70vw);
+  height: min(680px, 65vw);
+  right: -6%;
+  top: -19%;
+  background: radial-gradient(
+    ellipse,
+    rgba(120, 191, 138, 0.25),
+    rgba(83, 139, 119, 0.09) 60%,
+    transparent 78%
+  );
+  animation-name: aurora-mint;
+}
+.ambient span:nth-child(2) {
+  width: min(730px, 75vw);
+  height: min(640px, 70vw);
+  left: 9%;
+  top: 30%;
+  background: radial-gradient(
+    ellipse,
+    rgba(67, 143, 139, 0.18),
+    rgba(76, 116, 144, 0.07) 60%,
+    transparent 80%
+  );
+  animation-name: aurora-teal;
+  animation-duration: 32s;
+  animation-delay: -11s;
+}
+.ambient span:nth-child(3) {
+  width: min(680px, 70vw);
+  height: min(580px, 60vw);
+  bottom: -20%;
+  right: 5%;
+  background: radial-gradient(
+    ellipse,
+    rgba(200, 141, 113, 0.2),
+    rgba(149, 111, 134, 0.06) 60%,
+    transparent 78%
+  );
+  animation-name: aurora-peach;
+  animation-duration: 35s;
+  animation-delay: -18s;
+}
+html[data-theme="light"] .ambient span {
+  opacity: 0.55;
+}
+html[data-theme="light"] .ambient span:nth-child(1) {
+  background: radial-gradient(
+    ellipse,
+    rgba(120, 191, 138, 0.14),
+    rgba(83, 139, 119, 0.04) 60%,
+    transparent 78%
+  );
+}
+html[data-theme="light"] .ambient span:nth-child(2) {
+  background: radial-gradient(
+    ellipse,
+    rgba(67, 143, 139, 0.1),
+    rgba(76, 116, 144, 0.04) 60%,
+    transparent 80%
+  );
+}
+html[data-theme="light"] .ambient span:nth-child(3) {
+  background: radial-gradient(
+    ellipse,
+    rgba(200, 141, 113, 0.11),
+    rgba(149, 111, 134, 0.03) 60%,
+    transparent 78%
+  );
+}
+html[data-page-hidden="true"] .ambient span {
+  animation-play-state: paused;
+}
+html:has(dialog[open]) .ambient span {
+  animation-play-state: paused;
+}
+@keyframes aurora-mint {
+  0% {
+    transform: translate3d(-20px, -15px, 0) rotate(-8deg) scale(0.94);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(-95px, 60px, 0) rotate(6deg) scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(10px, 100px, 0) rotate(13deg) scale(1.15);
+    opacity: 0.85;
+  }
+}
+@keyframes aurora-teal {
+  0% {
+    transform: translate3d(-55px, 25px, 0) rotate(4deg) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate3d(60px, -65px, 0) rotate(-9deg) scale(1.16);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(100px, 55px, 0) rotate(5deg) scale(0.98);
+    opacity: 0.8;
+  }
+}
+@keyframes aurora-peach {
+  0% {
+    transform: translate3d(45px, 40px, 0) scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate3d(-70px, -40px, 0) scale(1.14);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-95px, 35px, 0) scale(0.96);
+    opacity: 0.8;
+  }
+}
+
+/* 03. Luz acompanha o cursor; o conteúdo dos cards permanece estável. */
+.panel {
+  backdrop-filter: none;
+  position: relative;
+  isolation: isolate;
+  transition:
+    border-color 280ms ease,
+    box-shadow 400ms ease;
+}
+.panel-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(
+    290px circle at var(--light-x, 50%) var(--light-y, 50%),
+    rgba(190, 243, 210, 0.055),
+    transparent 72%
+  );
+  transition: opacity 500ms ease;
+}
+.panel.is-pointer-inside {
+  border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+.panel.is-pointer-inside > .panel-sheen {
+  opacity: 1;
+}
+html[data-theme="light"] .panel-sheen {
+  background: radial-gradient(
+    290px circle at var(--light-x, 50%) var(--light-y, 50%),
+    rgba(70, 130, 91, 0.05),
+    transparent 72%
+  );
+}
+.button,
+.icon-button {
+  transition-timing-function: var(--ease-fluid);
+  transition-duration: 260ms;
+}
+.button:active:not(:disabled),
+.icon-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.96);
+  transition-duration: 100ms;
+}
+.shortcut {
+  transition:
+    background 260ms ease,
+    transform 320ms var(--ease-fluid);
+}
+.shortcut:hover {
+  transform: translateX(3px);
+}
+.shortcut .shortcut-icon {
+  transition: transform 360ms var(--ease-fluid);
+}
+.shortcut:hover .shortcut-icon {
+  transform: translate(-1px, -1px);
+}
+.nav-link {
+  transition:
+    background 280ms ease,
+    color 280ms ease,
+    border-color 280ms ease;
+}
+.nav-link b {
+  transition: opacity 280ms ease;
+}
+.orbit-progress {
+  transition: stroke-dashoffset 850ms var(--ease-fluid);
+}
+.bar-track > span {
+  transition: width 700ms var(--ease-fluid);
+}
+.chart-tooltip {
+  transition: left 120ms var(--ease-fluid);
+}
+.chart-point {
+  transition:
+    cx 120ms ease-out,
+    cy 120ms ease-out;
+}
+.transaction-row {
+  transition:
+    background 220ms ease,
+    border-color 220ms ease;
+}
+.type-picker span {
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+}
+.modal input:not([type="radio"]) {
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    background 200ms ease;
+}
+.modal input:not([type="radio"]):focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 9%, transparent);
+}
+
+/* 04. O indicador desliza entre filtros, inclusive pelo teclado. */
+.filter-tabs {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+  --active-tab: 0;
+}
+.filter-tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 3);
+  border-radius: 7px;
+  background: var(--raised);
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.07);
+  transform: translateX(calc(var(--active-tab) * 100%));
+  transition: transform 360ms var(--ease-fluid);
+}
+.filter-tabs button,
+.filter-tabs button[aria-pressed="true"] {
+  background: transparent;
+  box-shadow: none;
+  transition: color 220ms ease;
+}
+
+/* 05. Dialog nativo + starting-style: entrada e saída, com fallback imediato. */
+.modal {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition:
+    opacity 220ms ease,
+    transform 300ms var(--ease-fluid),
+    display 300ms allow-discrete,
+    overlay 300ms allow-discrete;
+}
+.modal[open] {
+  animation: none;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.modal:not([open]) {
+  pointer-events: none;
+}
+.modal::backdrop {
+  background: rgba(5, 14, 13, 0);
+  backdrop-filter: blur(0);
+  transition:
+    background 250ms ease,
+    backdrop-filter 250ms ease,
+    display 300ms allow-discrete,
+    overlay 300ms allow-discrete;
+}
+.modal[open]::backdrop {
+  background: rgba(5, 14, 13, 0.68);
+  backdrop-filter: blur(8px);
+}
+@starting-style {
+  .modal[open] {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  .modal[open]::backdrop {
+    background: rgba(5, 14, 13, 0);
+    backdrop-filter: blur(0);
+  }
+}
+.toast {
+  animation: none;
+}
+html[data-motion-ready="true"]
+  :is(
+    .intro,
+    .balance-card,
+    .stat-card,
+    .chart-card,
+    .insight-card,
+    .transactions-panel
+  ) {
+  animation: none;
+}
+
+/* 06. Troca de tema com View Transitions quando o navegador oferece suporte. */
+html.is-theme-switching * {
+  transition: none !important;
+}
+::view-transition-old(root) {
+  animation: theme-out 220ms ease both;
+}
+::view-transition-new(root) {
+  animation: theme-in 320ms ease both;
+}
+@keyframes theme-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes theme-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 07. Celular e acessibilidade: preferências têm prioridade sobre os efeitos. */
+@media (max-width: 760px) {
+  .ambient {
+    will-change: auto;
+  }
+  .ambient span {
+    filter: blur(48px);
+    animation-duration: 38s;
+  }
+  .ambient span:nth-child(1) {
+    width: 100vw;
+    height: 100vw;
+    right: -25%;
+    top: -10%;
+  }
+  .ambient span:nth-child(2) {
+    width: 100vw;
+    height: 120vw;
+    left: -30%;
+    top: 30%;
+  }
+  .ambient span:nth-child(3) {
+    width: 90vw;
+    height: 90vw;
+    right: -20%;
+    bottom: 5%;
+  }
+}
+html[data-motion="reduced"] {
+  scroll-behavior: auto;
+}
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+html[data-motion="reduced"] .ambient,
+html[data-motion="reduced"] .ambient span {
+  will-change: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+  .ambient,
+  .ambient span {
+    will-change: auto;
+  }
+}

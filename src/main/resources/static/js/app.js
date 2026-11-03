@@ -36,6 +36,7 @@ const state = {
   chart: [],
 };
 let toastTimer;
+let toastVersion = 0;
 let previousFocus;
 
 function readPreference(key, fallback) {
@@ -262,11 +263,27 @@ function render() {
   const rows = periodRows();
   const summary = totals(rows);
   const balance = summary.income - summary.expenses;
-  $("#balance").textContent = formatMoney(balance);
-  $("#income").textContent = formatMoney(summary.income);
-  $("#expenses").textContent = formatMoney(summary.expenses);
-  $("#comparison-income").textContent = formatMoney(summary.income);
-  $("#comparison-expenses").textContent = formatMoney(summary.expenses);
+  dashboardMotion.money($("#balance"), formatMoney(balance), state.hidden);
+  dashboardMotion.money(
+    $("#income"),
+    formatMoney(summary.income),
+    state.hidden,
+  );
+  dashboardMotion.money(
+    $("#expenses"),
+    formatMoney(summary.expenses),
+    state.hidden,
+  );
+  dashboardMotion.money(
+    $("#comparison-income"),
+    formatMoney(summary.income),
+    state.hidden,
+  );
+  dashboardMotion.money(
+    $("#comparison-expenses"),
+    formatMoney(summary.expenses),
+    state.hidden,
+  );
   $("#income-count").textContent = plural(
     summary.incomeCount,
     "entrada no período",
@@ -311,6 +328,7 @@ function render() {
 }
 
 function renderTransactions(rows) {
+  const previousPositions = dashboardMotion.captureRows($("#transaction-list"));
   const query = normalize(state.search.trim());
   const filtered = rows.filter(
     (item) =>
@@ -361,6 +379,7 @@ function renderTransactions(rows) {
   for (const item of visible) {
     const income = item.type === "RECEITA";
     const row = document.createElement("li");
+    row.dataset.id = item.id;
     row.className = `transaction-row ${income ? "is-income" : "is-expense"}`;
     const identity = document.createElement("div");
     identity.className = "transaction-identity";
@@ -401,6 +420,7 @@ function renderTransactions(rows) {
     row.append(identity, date, amount, actions);
     $("#transaction-list").append(row);
   }
+  dashboardMotion.rows($("#transaction-list"), previousPositions);
 }
 
 // 04. SVG: desenhamos apenas o resultado acumulado dos lançamentos existentes.
@@ -554,6 +574,7 @@ function renderChart(rows) {
     svgNode("path", {
       d: `${line} L${points.at(-1).x},${y(0n)} L${points[0].x},${y(0n)} Z`,
       fill: "url(#flow-fill)",
+      class: "chart-area",
     }),
     svgNode("path", { d: line, class: "chart-line" }),
   );
@@ -577,6 +598,10 @@ function renderChart(rows) {
   );
   $("#chart-description").textContent =
     `Resultado acumulado no período: ${formatMoney(points.at(-1).value)}. Use as setas para explorar as datas.`;
+  dashboardMotion.chart(
+    svg,
+    `${width}:${points.map((point) => `${point.day}:${point.value}`).join("|")}`,
+  );
 }
 
 function showChartPoint(index) {
@@ -630,7 +655,7 @@ function closeTransaction() {
 
 async function saveTransaction(event) {
   event.preventDefault();
-  if (state.saving) return;
+  if (state.saving || !$("#transaction-dialog").open) return;
   const form = $("#transaction-form");
   $("#form-error").hidden = true;
   $("#amount-input").setCustomValidity("");
@@ -708,7 +733,8 @@ function openDelete(id) {
 }
 
 async function confirmDelete() {
-  if (state.deleting || state.deletingId === null) return;
+  if (state.deleting || state.deletingId === null || !$("#delete-dialog").open)
+    return;
   state.deleting = true;
   $("#confirm-delete").disabled = true;
   $("#cancel-delete").disabled = true;
@@ -736,21 +762,33 @@ async function confirmDelete() {
 
 function showToast(message) {
   clearTimeout(toastTimer);
+  const version = ++toastVersion;
   $("#toast-message").textContent = message;
   $("#toast").hidden = false;
+  dashboardMotion.toast($("#toast"), true);
   toastTimer = setTimeout(() => {
-    $("#toast").hidden = true;
+    const exit = dashboardMotion.toast($("#toast"), false);
+    if (exit)
+      exit.finished
+        .catch(() => {})
+        .then(() => {
+          if (version === toastVersion) $("#toast").hidden = true;
+        });
+    else $("#toast").hidden = true;
   }, 4200);
 }
 function setTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  $("#theme-toggle").innerHTML = icon(theme === "dark" ? "sun" : "moon");
-  const label = `Ativar tema ${theme === "dark" ? "claro" : "escuro"}`;
-  $("#theme-toggle").setAttribute("aria-label", label);
-  $("#theme-toggle").title = label;
+  dashboardMotion.applyTheme(() => {
+    document.documentElement.dataset.theme = theme;
+    $("#theme-toggle").innerHTML = icon(theme === "dark" ? "sun" : "moon");
+    const label = `Ativar tema ${theme === "dark" ? "claro" : "escuro"}`;
+    $("#theme-toggle").setAttribute("aria-label", label);
+    $("#theme-toggle").title = label;
+  });
   writePreference("financeflow-theme", theme);
 }
 function setPrivacy(hidden) {
+  dashboardMotion.privacy();
   state.hidden = hidden;
   $("#privacy-toggle").innerHTML = icon(hidden ? "eye-off" : "eye");
   $("#privacy-toggle").setAttribute("aria-pressed", String(hidden));
@@ -799,8 +837,10 @@ $("#transaction-list").addEventListener("click", (event) => {
     : openDelete(button.dataset.id);
 });
 $("#theme-toggle").addEventListener("click", () =>
-  setTheme(
-    document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+  dashboardMotion.theme(() =>
+    setTheme(
+      document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+    ),
   ),
 );
 $("#privacy-toggle").addEventListener("click", () => setPrivacy(!state.hidden));

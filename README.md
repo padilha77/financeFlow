@@ -25,7 +25,7 @@ Esta versão substitui o menu do terminal pela API: as ações passam a ser feit
 
 ## Dashboard
 
-A página inicial oferece um dashboard com valores reais, gráfico interativo, busca, filtros, tema claro/escuro e cadastro, edição e exclusão de transações.
+A página inicial oferece um dashboard com valores reais, gráfico interativo, busca, filtros, tema claro/escuro, movimento suave com opção de pausa e cadastro, edição e exclusão de transações.
 
 Veja o [guia do dashboard](docs/dashboard.md), com captura de tela, instruções para Windows, atalhos e mapa de linhas para estudar os arquivos. Para editar os recursos diretamente durante o desenvolvimento:
 

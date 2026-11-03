@@ -13,8 +13,10 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%2310191a'/%3E%3Cg fill='%23b5edcb'%3E%3Crect x='9' y='20' width='5' height='12' rx='2'/%3E%3Crect x='18' y='13' width='5' height='19' rx='2'/%3E%3Crect x='27' y='6' width='5' height='26' rx='2'/%3E%3C/g%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="/css/styles.css?v=3" />
-    <script src="/js/app.js?v=3" defer></script>
+    <link rel="stylesheet" href="/css/styles.css?v=4" />
+    <link rel="stylesheet" href="/css/motion.css?v=4" />
+    <script src="/js/motion.js?v=4" defer></script>
+    <script src="/js/app.js?v=4" defer></script>
   </head>
   <body>
     <!-- 01. Ícones locais: o painel funciona sem bibliotecas ou fontes externas. -->
@@ -23,6 +25,12 @@
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <symbol id="i-pause" viewBox="0 0 24 24">
+        <path d="M9 5v14M15 5v14" />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24">
+        <path d="M8 5l11 7-11 7z" />
+      </symbol>
       <symbol id="i-grid" viewBox="0 0 24 24">
         <rect x="3" y="3" width="7" height="7" rx="2" />
         <rect x="14" y="3" width="7" height="7" rx="2" />
@@ -90,7 +98,9 @@
         <rect x="3" y="5" width="18" height="16" rx="3" />
         <path d="M7 3v4M17 3v4M3 11h18" />
       </symbol>
-<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M5 5l14 14M5 19L19 5"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24">
+        <path d="M12 2v20M2 12h20M5 5l14 14M5 19L19 5" />
+      </symbol>
       <symbol id="i-wallet" viewBox="0 0 24 24">
         <path
           d="M20 8V5a2 2 0 0 0-2-2L5 6a3 3 0 0 0-2 3v10a2 2 0 0 0 2 2h15V9H6M20 12h-5v5h5"
@@ -144,7 +154,9 @@
           </button>
         </div>
         <div class="sidebar-bottom">
-          <span class="little-orbit" aria-hidden="true"><svg class="icon"><use href="#i-spark"/></svg></span>
+          <span class="little-orbit" aria-hidden="true"
+            ><svg class="icon"><use href="#i-spark" /></svg
+          ></span>
           <p>Clareza hoje.<br /><strong>Mais liberdade amanhã.</strong></p>
           <span class="sidebar-version"
             >financeFlow · seu espaço financeiro</span
@@ -168,6 +180,15 @@
               title="Ocultar valores"
             >
               <svg class="icon"><use href="#i-eye" /></svg></button
+            ><button
+              type="button"
+              id="motion-toggle"
+              class="icon-button"
+              aria-label="Pausar animações"
+              aria-pressed="false"
+              title="Pausar animações"
+            >
+              <svg class="icon"><use href="#i-pause" /></svg></button
             ><button
               type="button"
               id="theme-toggle"
@@ -250,7 +271,9 @@
               <div class="balance-bottom">
                 <span class="soft-tag" id="balance-message"
                   >Seu próximo passo começa aqui</span
-                ><span class="balance-decoration" aria-hidden="true"><svg class="icon"><use href="#i-out"/></svg></span>
+                ><span class="balance-decoration" aria-hidden="true"
+                  ><svg class="icon"><use href="#i-out" /></svg
+                ></span>
               </div>
             </div>
             <figure class="savings-orbit">
@@ -378,7 +401,9 @@
             <p class="insight-text" id="insight-text">
               Um pouco de clareza muda a forma de olhar para o amanhã.
             </p>
-            <span class="insight-spark" aria-hidden="true"><svg class="icon"><use href="#i-spark"/></svg></span>
+            <span class="insight-spark" aria-hidden="true"
+              ><svg class="icon"><use href="#i-spark" /></svg
+            ></span>
           </article>
         </section>
 
@@ -484,8 +509,9 @@
         <footer class="page-footer">
           <span>Feito para dar espaço ao que importa.</span
           ><a href="#overview"
-            >Voltar ao topo <svg class="icon" aria-hidden="true"><use href="#i-out"/></svg></a
-          >
+            >Voltar ao topo
+            <svg class="icon" aria-hidden="true"><use href="#i-out" /></svg
+          ></a>
         </footer>
       </main>
     </div>
