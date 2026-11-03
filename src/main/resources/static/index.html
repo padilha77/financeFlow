@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10191a" />
+    <meta
+      name="description"
+      content="Seu dinheiro, com clareza. Um espaço para acompanhar suas receitas, despesas e próximos passos."
+    />
+    <title>financeFlow — Seu dinheiro em boa órbita</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%2310191a'/%3E%3Cg fill='%23b5edcb'%3E%3Crect x='9' y='20' width='5' height='12' rx='2'/%3E%3Crect x='18' y='13' width='5' height='19' rx='2'/%3E%3Crect x='27' y='6' width='5' height='26' rx='2'/%3E%3C/g%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/css/styles.css?v=3" />
+    <script src="/js/app.js?v=3" defer></script>
+  </head>
+  <body>
+    <!-- 01. Ícones locais: o painel funciona sem bibliotecas ou fontes externas. -->
+    <svg
+      class="icon-definitions"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="2" />
+        <rect x="14" y="3" width="7" height="7" rx="2" />
+        <rect x="3" y="14" width="7" height="7" rx="2" />
+        <rect x="14" y="14" width="7" height="7" rx="2" />
+      </symbol>
+      <symbol id="i-flow" viewBox="0 0 24 24">
+        <path d="M3 17l5-6 5 3 8-10M16 4h5v5M3 21h18" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path d="M9 6h12M9 12h12M9 18h12M3 6h.01M3 12h.01M3 18h.01" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-in" viewBox="0 0 24 24">
+        <path d="M18 6L6 18M6 7v11h11" />
+      </symbol>
+      <symbol id="i-out" viewBox="0 0 24 24">
+        <path d="M6 18L18 6M7 6h11v11" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="M16 16l5 5" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"
+        />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M20.8 13a8.8 8.8 0 0 1-9.8-9.8A9 9 0 1 0 20.8 13z" />
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-eye-off" viewBox="0 0 24 24">
+        <path
+          d="M3 3l18 18M10.6 5.1L12 5c6.5 0 10 7 10 7a22 22 0 0 1-3.1 3.9M6.3 6.3A22 22 0 0 0 2 12s3.5 7 10 7a12 12 0 0 0 5.7-1.5M10 10a3 3 0 0 0 4 4"
+        />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path
+          d="M20 7v5h-5M4 17v-5h5M5.7 7a7 7 0 0 1 11.6-2L20 8M4 16l2.7 3A7 7 0 0 0 18.3 17"
+        />
+      </symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24">
+        <path d="M14 5l5 5M4 20l5-1L21 7a2.1 2.1 0 0 0-4-4L5 15z" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="M6 6l12 12M6 18L18 6" />
+      </symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24">
+        <path d="M9 5l7 7-7 7" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M5 12l4 4L19 6" />
+      </symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="3" />
+        <path d="M7 3v4M17 3v4M3 11h18" />
+      </symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M5 5l14 14M5 19L19 5"/></symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24">
+        <path
+          d="M20 8V5a2 2 0 0 0-2-2L5 6a3 3 0 0 0-2 3v10a2 2 0 0 0 2 2h15V9H6M20 12h-5v5h5"
+        />
+      </symbol>
+    </svg>
+
+    <div class="ambient" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="app-shell">
+      <!-- 02. Navegação e atalhos que abrem o formulário real. -->
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="financeFlow, visão geral">
+          <span class="brand-mark" aria-hidden="true"
+            ><i></i><i></i><i></i
+          ></span>
+          <span
+            >finance<span class="brand-light">Flow</span
+            ><small>MAIS LEVE. MAIS SEU.</small></span
+          >
+        </a>
+        <p class="side-label">SEU ESPAÇO</p>
+        <nav class="navigation" aria-label="Navegação principal">
+          <a href="#overview" class="nav-link active" aria-current="location"
+            ><svg class="icon"><use href="#i-grid" /></svg
+            ><span>Visão geral</span><b></b
+          ></a>
+          <a href="#flow" class="nav-link"
+            ><svg class="icon"><use href="#i-flow" /></svg><span>Seu fluxo</span
+            ><b></b
+          ></a>
+          <a href="#transactions" class="nav-link"
+            ><svg class="icon"><use href="#i-list" /></svg
+            ><span>Transações</span><b></b
+          ></a>
+        </nav>
+        <div class="side-shortcuts">
+          <p class="side-label">PEQUENOS ATALHOS</p>
+          <button type="button" class="shortcut" data-new="RECEITA">
+            <span class="shortcut-icon income"
+              ><svg class="icon"><use href="#i-in" /></svg></span
+            ><span>Registrar entrada<small>Uma nova possibilidade.</small></span
+            ><svg class="icon tiny"><use href="#i-plus" /></svg>
+          </button>
+          <button type="button" class="shortcut" data-new="DESPESA">
+            <span class="shortcut-icon expense"
+              ><svg class="icon"><use href="#i-out" /></svg></span
+            ><span>Registrar saída<small>Cada escolha conta.</small></span
+            ><svg class="icon tiny"><use href="#i-plus" /></svg>
+          </button>
+        </div>
+        <div class="sidebar-bottom">
+          <span class="little-orbit" aria-hidden="true"><svg class="icon"><use href="#i-spark"/></svg></span>
+          <p>Clareza hoje.<br /><strong>Mais liberdade amanhã.</strong></p>
+          <span class="sidebar-version"
+            >financeFlow · seu espaço financeiro</span
+          >
+        </div>
+      </aside>
+
+      <main class="workspace" id="overview">
+        <header class="topbar">
+          <div class="breadcrumb">
+            <span>Seu espaço</span><span>/</span><strong>Visão geral</strong>
+          </div>
+          <div class="top-actions">
+            <span id="today-label" class="today-label"></span
+            ><button
+              type="button"
+              id="privacy-toggle"
+              class="icon-button"
+              aria-label="Ocultar valores"
+              aria-pressed="false"
+              title="Ocultar valores"
+            >
+              <svg class="icon"><use href="#i-eye" /></svg></button
+            ><button
+              type="button"
+              id="theme-toggle"
+              class="icon-button"
+              aria-label="Ativar tema claro"
+              title="Ativar tema claro"
+            >
+              <svg class="icon"><use href="#i-sun" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <section class="intro" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow"><span></span> UM NOVO OLHAR PARA SEU DINHEIRO</p>
+            <h1 id="page-title">
+              Sua vida financeira,<br /><em>em boa órbita.</em>
+            </h1>
+            <p class="intro-description">
+              Menos ruído. Mais clareza para os seus próximos passos.
+            </p>
+          </div>
+          <button
+            type="button"
+            class="button button-primary"
+            data-new="RECEITA"
+          >
+            <svg class="icon"><use href="#i-plus" /></svg> Nova transação
+            <kbd>N</kbd>
+          </button>
+        </section>
+
+        <div class="dashboard-controls">
+          <div class="sync-state" id="sync-state" role="status">
+            <span class="status-dot"></span
+            ><span id="sync-label">Preparando seu espaço…</span>
+          </div>
+          <div class="period-control">
+            <svg class="icon"><use href="#i-calendar" /></svg
+            ><label for="period-select" class="sr-only"
+              >Período do dashboard</label
+            ><select id="period-select">
+              <option value="all">Todo o período</option>
+              <option value="month">Este mês</option>
+              <option value="previous">Mês anterior</option>
+              <option value="last90">Últimos 90 dias</option></select
+            ><button
+              type="button"
+              id="refresh-button"
+              class="icon-button"
+              title="Atualizar dados"
+              aria-label="Atualizar dados"
+            >
+              <svg class="icon"><use href="#i-refresh" /></svg>
+            </button>
+          </div>
+        </div>
+        <div class="error-banner" id="load-error" hidden>
+          <p id="load-error-text"></p>
+          <button type="button" id="retry-button" class="text-button">
+            Tentar novamente
+          </button>
+        </div>
+
+        <!-- 03. Indicadores: todos usam dados reais, no período selecionado. -->
+        <section class="overview-grid" aria-label="Resumo financeiro">
+          <article class="balance-card panel">
+            <div class="balance-copy">
+              <div class="balance-label">
+                <span class="round-icon"
+                  ><svg class="icon"><use href="#i-wallet" /></svg
+                ></span>
+                <h2>Saldo do período</h2>
+                <span class="currency-badge">BRL</span>
+              </div>
+              <p class="balance-value money" id="balance">—</p>
+              <p class="balance-note">
+                Um panorama do que entrou e do que saiu.
+              </p>
+              <div class="balance-bottom">
+                <span class="soft-tag" id="balance-message"
+                  >Seu próximo passo começa aqui</span
+                ><span class="balance-decoration" aria-hidden="true"><svg class="icon"><use href="#i-out"/></svg></span>
+              </div>
+            </div>
+            <figure class="savings-orbit">
+              <div class="orbit-decoration" aria-hidden="true"></div>
+              <svg viewBox="0 0 180 180" class="orbit-svg" aria-hidden="true">
+                <defs>
+                  <linearGradient
+                    id="orbit-gradient"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="1"
+                  >
+                    <stop stop-color="#dcffce" />
+                    <stop offset="1" stop-color="#75dac9" />
+                  </linearGradient>
+                </defs>
+                <circle class="orbit-track" cx="90" cy="90" r="68" />
+                <circle
+                  class="orbit-progress"
+                  id="savings-progress"
+                  cx="90"
+                  cy="90"
+                  r="68"
+                  pathLength="100"
+                  stroke-dasharray="100"
+                  stroke-dashoffset="100"
+                />
+              </svg>
+              <figcaption>
+                <strong id="savings-rate">—</strong
+                ><span>das receitas<br />ficaram com você</span>
+              </figcaption>
+            </figure>
+          </article>
+          <div class="side-stats">
+            <article class="stat-card panel">
+              <div>
+                <span class="stat-label">Receitas</span
+                ><span class="metric-icon income"
+                  ><svg class="icon"><use href="#i-in" /></svg
+                ></span>
+              </div>
+              <p class="stat-value money" id="income">—</p>
+              <p class="stat-foot">
+                <span class="small-dot income"></span
+                ><span id="income-count">Entradas no período</span>
+              </p>
+            </article>
+            <article class="stat-card panel">
+              <div>
+                <span class="stat-label">Despesas</span
+                ><span class="metric-icon expense"
+                  ><svg class="icon"><use href="#i-out" /></svg
+                ></span>
+              </div>
+              <p class="stat-value money" id="expenses">—</p>
+              <p class="stat-foot">
+                <span class="small-dot expense"></span
+                ><span id="expenses-count">Saídas no período</span>
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- 04. Gráfico SVG interativo, construído a partir das transações. -->
+        <section
+          class="flow-grid"
+          id="flow"
+          aria-label="Visualização do fluxo financeiro"
+        >
+          <article class="chart-card panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">OS SEUS MOVIMENTOS</p>
+                <h2>Seu fluxo, dia a dia<span class="heading-dot">.</span></h2>
+              </div>
+              <span class="chart-legend"><i></i> Resultado acumulado</span>
+            </div>
+            <div class="chart-wrap" id="chart-wrap">
+              <svg
+                id="flow-chart"
+                viewBox="0 0 760 210"
+                role="img"
+                tabindex="0"
+                aria-label="Fluxo financeiro. Use as setas para explorar os dias."
+              ></svg>
+              <div class="chart-tooltip" id="chart-tooltip" hidden>
+                <span id="chart-tooltip-date"></span
+                ><strong id="chart-tooltip-value"></strong>
+              </div>
+              <p class="chart-empty" id="chart-empty" hidden>
+                Seu fluxo começa com a primeira transação.
+              </p>
+            </div>
+            <div class="chart-footer">
+              <span id="chart-start">—</span
+              ><span class="chart-help"
+                >Passe o cursor ou use as setas para explorar</span
+              ><span id="chart-end">—</span>
+            </div>
+            <p class="sr-only" id="chart-description"></p>
+          </article>
+          <article class="insight-card panel">
+            <p class="eyebrow">UMA OUTRA PERSPECTIVA</p>
+            <h2>
+              O equilíbrio<br />do seu fluxo<span class="heading-dot">.</span>
+            </h2>
+            <div class="flow-comparison">
+              <div>
+                <span><i class="small-dot income"></i> Entradas</span
+                ><strong id="comparison-income" class="money">—</strong>
+              </div>
+              <div class="bar-track">
+                <span id="income-bar" class="income-bar"></span>
+              </div>
+              <div>
+                <span><i class="small-dot expense"></i> Saídas</span
+                ><strong id="comparison-expenses" class="money">—</strong>
+              </div>
+              <div class="bar-track">
+                <span id="expense-bar" class="expense-bar"></span>
+              </div>
+            </div>
+            <p class="insight-text" id="insight-text">
+              Um pouco de clareza muda a forma de olhar para o amanhã.
+            </p>
+            <span class="insight-spark" aria-hidden="true"><svg class="icon"><use href="#i-spark"/></svg></span>
+          </article>
+        </section>
+
+        <!-- 05. Busca, filtros, ordenação, paginação e ações por registro. -->
+        <section
+          class="transactions-panel panel"
+          id="transactions"
+          aria-labelledby="transactions-title"
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">CADA MOVIMENTO CONTA</p>
+              <h2 id="transactions-title">
+                Seu histórico<span class="heading-dot">.</span>
+              </h2>
+            </div>
+            <span class="count-badge" id="transactions-count">—</span>
+          </div>
+          <div class="transaction-toolbar">
+            <div class="filter-tabs" role="group" aria-label="Filtrar por tipo">
+              <button type="button" data-type="all" aria-pressed="true">
+                Todos</button
+              ><button type="button" data-type="RECEITA" aria-pressed="false">
+                Entradas</button
+              ><button type="button" data-type="DESPESA" aria-pressed="false">
+                Saídas
+              </button>
+            </div>
+            <div class="search-sort">
+              <div class="search-field">
+                <svg class="icon"><use href="#i-search" /></svg
+                ><label for="transaction-search" class="sr-only"
+                  >Buscar transação pela descrição</label
+                ><input
+                  id="transaction-search"
+                  type="search"
+                  placeholder="Buscar lançamento…"
+                  autocomplete="off"
+                /><kbd>/</kbd>
+              </div>
+              <label class="sr-only" for="sort-select">Ordenar transações</label
+              ><select id="sort-select">
+                <option value="recent">Mais recentes</option>
+                <option value="oldest">Mais antigas</option>
+                <option value="amount">Maior valor</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-labels" aria-hidden="true">
+            <span>LANÇAMENTO</span><span>DATA</span><span>VALOR</span
+            ><span>AÇÕES</span>
+          </div>
+          <div class="empty-state" id="transactions-empty" hidden>
+            <span class="empty-symbol" aria-hidden="true">↗</span>
+            <h3 id="empty-title">Um novo começo.</h3>
+            <p id="empty-description">
+              Seu histórico começa com o primeiro lançamento.
+            </p>
+            <button
+              type="button"
+              class="button button-secondary"
+              id="empty-create"
+              data-new="RECEITA"
+            >
+              <svg class="icon"><use href="#i-plus" /></svg> Criar transação</button
+            ><button
+              type="button"
+              class="text-button"
+              id="clear-filters"
+              hidden
+            >
+              Limpar filtros do histórico
+            </button>
+          </div>
+          <p class="list-loading" id="transactions-loading">
+            Buscando seus movimentos…
+          </p>
+          <ul class="transaction-list" id="transaction-list" role="list"></ul>
+          <footer class="table-footer">
+            <p id="pagination-label" role="status">—</p>
+            <div class="pagination">
+              <button
+                type="button"
+                id="previous-page"
+                class="icon-button"
+                aria-label="Página anterior"
+                disabled
+              >
+                <svg class="icon flip"><use href="#i-chevron" /></svg></button
+              ><span id="page-label">1 / 1</span
+              ><button
+                type="button"
+                id="next-page"
+                class="icon-button"
+                aria-label="Próxima página"
+                disabled
+              >
+                <svg class="icon"><use href="#i-chevron" /></svg>
+              </button>
+            </div>
+          </footer>
+        </section>
+        <footer class="page-footer">
+          <span>Feito para dar espaço ao que importa.</span
+          ><a href="#overview"
+            >Voltar ao topo <svg class="icon" aria-hidden="true"><use href="#i-out"/></svg></a
+          >
+        </footer>
+      </main>
+    </div>
+
+    <!-- 06. Formulário compartilhado por cadastro e edição. -->
+    <dialog
+      id="transaction-dialog"
+      class="modal"
+      aria-labelledby="dialog-title"
+    >
+      <form id="transaction-form" novalidate>
+        <div class="modal-heading">
+          <div>
+            <p class="eyebrow">UM MOVIMENTO DE CADA VEZ</p>
+            <h2 id="dialog-title">
+              Nova transação<span class="heading-dot">.</span>
+            </h2>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            id="close-dialog"
+            aria-label="Fechar formulário"
+          >
+            <svg class="icon"><use href="#i-close" /></svg>
+          </button>
+        </div>
+        <fieldset class="type-picker">
+          <legend class="sr-only">Tipo da transação</legend>
+          <label
+            ><input type="radio" name="type" value="RECEITA" checked /><span
+              ><svg class="icon"><use href="#i-in" /></svg> Entrada</span
+            ></label
+          ><label
+            ><input type="radio" name="type" value="DESPESA" /><span
+              ><svg class="icon"><use href="#i-out" /></svg> Saída</span
+            ></label
+          >
+        </fieldset>
+        <label class="form-label" for="amount-input"
+          >Valor <span>R$</span></label
+        ><input
+          class="amount-input"
+          id="amount-input"
+          name="amount"
+          type="text"
+          inputmode="decimal"
+          placeholder="0,00"
+          required
+          autocomplete="off"
+          aria-describedby="amount-help"
+        />
+        <p class="field-help" id="amount-help">Exemplo: 1.250,50</p>
+        <label class="form-label" for="description-input">Descrição</label
+        ><input
+          id="description-input"
+          name="description"
+          type="text"
+          maxlength="200"
+          placeholder="Dê um nome a esse movimento"
+          required
+          autocomplete="off"
+        />
+        <label class="form-label" for="date-input">Data</label
+        ><input
+          id="date-input"
+          name="date"
+          type="date"
+          required
+          min="0001-01-01"
+          max="9999-12-31"
+        />
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+        <div class="modal-footer">
+          <button type="button" class="button button-ghost" id="cancel-dialog">
+            Cancelar</button
+          ><button
+            type="submit"
+            class="button button-primary"
+            id="save-transaction"
+          >
+            <svg class="icon"><use href="#i-check" /></svg
+            ><span>Salvar transação</span>
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog
+      id="delete-dialog"
+      class="modal delete-modal"
+      aria-labelledby="delete-title"
+    >
+      <div class="delete-symbol">
+        <svg class="icon"><use href="#i-trash" /></svg>
+      </div>
+      <h2 id="delete-title">Excluir este movimento?</h2>
+      <p class="delete-description" id="delete-description"></p>
+      <p class="field-help">O lançamento será removido do seu histórico.</p>
+      <p class="form-error" id="delete-error" role="alert" hidden></p>
+      <div class="modal-footer">
+        <button type="button" id="cancel-delete" class="button button-ghost">
+          Manter transação</button
+        ><button type="button" id="confirm-delete" class="button button-danger">
+          Excluir transação
+        </button>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="status" hidden>
+      <span class="toast-icon"
+        ><svg class="icon"><use href="#i-check" /></svg></span
+      ><span id="toast-message"></span>
+    </div>
+    <noscript
+      ><p class="noscript">
+        Ative o JavaScript do navegador para consultar e organizar suas
+        transações.
+      </p></noscript
+    >
+  </body>
+</html>
