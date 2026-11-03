@@ -57,5 +57,46 @@ public class TransactionServiceTest {
 
     }
 
+    @Test
+    void deveRejeitarTransacaoComDescricaoVazia() {
+        TransactionService service = new TransactionService();
+
+        Transaction despesa = new Transaction(
+                "  ",
+                LocalDate.now(),
+                new BigDecimal("100"),
+                TransactionType.DESPESA
+        );
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.addTransaction(despesa);
+        });
+        assertEquals(0, service.getTransactions().size());
+    }
+
+    @Test
+    void deveCalcularSaldoCorretamente() {
+        TransactionService service = new TransactionService();
+
+        Transaction receita = new Transaction(
+                "Salario",
+                LocalDate.now(),
+                new BigDecimal("3000.00"),
+                TransactionType.RECEITA
+        );
+
+        Transaction despesa = new Transaction(
+                "Conta de luz",
+                LocalDate.now(),
+                new BigDecimal("500.00"),
+                TransactionType.DESPESA
+        );
+        service.addTransaction(receita);
+        service.addTransaction(despesa);
+
+        assertEquals(new BigDecimal("2500.00"),
+                service.calculateBalance()
+        );
+    }
+
 
 }
