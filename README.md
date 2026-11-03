@@ -77,7 +77,7 @@ docker compose --profile test up -d --wait
 
 Os cinco cenários originais foram preservados e adaptados ao repositório: adicionar transação, rejeitar valor negativo, rejeitar zero, rejeitar descrição vazia e calcular saldo. Há verificações adicionais de campos obrigatórios e precisão monetária.
 
-Os testes de integração usam um banco separado na porta **5433**, exercitam HTTP, validação, migração e consultas reais. Cada teste desfaz suas alterações ao terminar. A porta **5432** é exclusiva do banco de desenvolvimento.
+Os testes de integração usam um banco separado na porta **5433**, exercitam HTTP, validação, migração e consultas reais. Cada teste desfaz suas alterações ao terminar. A porta **15432** é exclusiva do banco de desenvolvimento.
 
 ## Como o código está organizado
 
@@ -101,13 +101,13 @@ O fluxo é **requisição → controller → service → repository → PostgreS
 
 ## Configuração e dados
 
-| Variável | Padrão local | Uso |
-| --- | --- | --- |
-| `DB_URL` | `jdbc:postgresql://localhost:5432/financeflow` | Conexão JDBC da aplicação |
-| `DB_USER` | `financeflow` | Usuário do banco |
-| `DB_PASSWORD` | `financeflow_dev` | Senha de desenvolvimento |
-| `PORT` | `8080` | Porta da API |
-| `SERVER_ADDRESS` | `127.0.0.1` | Interface de rede da API |
+| Variável | Padrão local                                    | Uso |
+| --- |-------------------------------------------------| --- |
+| `DB_URL` | `jdbc:postgresql://localhost:15432/financeflow` | Conexão JDBC da aplicação |
+| `DB_USER` | `financeflow`                                   | Usuário do banco |
+| `DB_PASSWORD` | `financeflow_dev`                               | Senha de desenvolvimento |
+| `PORT` | `8080`                                          | Porta da API |
+| `SERVER_ADDRESS` | `127.0.0.1`                                     | Interface de rede da API |
 
 As credenciais padrão são exclusivas para desenvolvimento local. Para alterá-las, exporte as variáveis no terminal antes de iniciar tanto o Compose quanto a aplicação. Um arquivo `.env` é lido pelo Compose, mas não é carregado automaticamente pelo Spring Boot. Não versione credenciais reais.
 
