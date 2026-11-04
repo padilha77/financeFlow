@@ -34,6 +34,8 @@ const state = {
   request: 0,
   controller: null,
   chart: [],
+  chartMetric: "balance",
+  view: "overview",
 };
 let toastTimer;
 let toastVersion = 0;
@@ -298,32 +300,66 @@ function render() {
     summary.income > 0n
       ? Number((balance * 1000n) / summary.income) / 10
       : null;
-  $("#savings-rate").textContent =
-    rate === null
+  $("#savings-rate").textContent = state.hidden
+    ? "•••"
+    : rate === null
       ? "—"
       : `${new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(rate)}%`;
   $("#savings-progress").style.strokeDashoffset = String(
-    100 - Math.max(0, Math.min(100, rate ?? 0)),
+    100 - Math.max(0, Math.min(100, state.hidden ? 0 : (rate ?? 0))),
   );
-  $("#balance-message").textContent = !rows.length
-    ? "Seu próximo passo começa aqui"
-    : balance < 0n
-      ? "Um momento para olhar com carinho"
-      : "Um passo de cada vez, mais longe";
+  $("#balance").classList.toggle("is-negative", balance < 0n && !state.hidden);
+  $("#balance-message").textContent = state.hidden
+    ? "Valores protegidos"
+    : !rows.length
+      ? "Seu primeiro passo começa aqui"
+      : balance < 0n
+        ? "Saldo negativo"
+        : balance === 0n
+          ? "Entradas e saídas em equilíbrio"
+          : "Resultado positivo";
   const largest =
     summary.income > summary.expenses ? summary.income : summary.expenses;
   $("#income-bar").style.width =
-    `${largest ? Number((summary.income * 1000n) / largest) / 10 : 0}%`;
+    `${largest && !state.hidden ? Number((summary.income * 1000n) / largest) / 10 : 0}%`;
   $("#expense-bar").style.width =
-    `${largest ? Number((summary.expenses * 1000n) / largest) / 10 : 0}%`;
+    `${largest && !state.hidden ? Number((summary.expenses * 1000n) / largest) / 10 : 0}%`;
   $("#insight-text").textContent = !rows.length
-    ? "Seu primeiro lançamento transforma esse espaço em uma visão do seu dinheiro."
-    : balance < 0n
-      ? `As saídas superaram as entradas em ${formatMoney(-balance)} neste período.`
-      : summary.income === 0n
-        ? "Ainda não há receitas neste período."
-        : `Neste período, ${formatMoney(balance)} das suas receitas ficaram com você.`;
-  renderChart(rows);
+    ? "Seu equilíbrio começa com o primeiro lançamento."
+    : state.hidden
+      ? "Seus valores estão protegidos. Toque no olho para mostrá-los."
+      : balance < 0n
+        ? `As saídas ultrapassaram as entradas em ${formatMoney(-balance)}.`
+        : summary.income === 0n
+          ? "Ainda não há receitas neste período."
+          : `${formatMoney(balance)} das suas receitas ficaram com você neste período.`;
+  const expenses = rows.filter((item) => item.type === "DESPESA");
+  const largestExpense = expenses.reduce(
+    (best, item) => (!best || item.cents > best.cents ? item : best),
+    null,
+  );
+  dashboardMotion.money(
+    $("#largest-expense"),
+    largestExpense ? formatMoney(largestExpense.cents) : "—",
+    state.hidden,
+  );
+  $("#largest-description").textContent =
+    largestExpense?.description ?? "Nenhuma saída no período";
+  dashboardMotion.money(
+    $("#average-expense"),
+    expenses.length
+      ? formatMoney(
+          (summary.expenses + BigInt(Math.floor(expenses.length / 2))) /
+            BigInt(expenses.length),
+        )
+      : "—",
+    state.hidden,
+  );
+  const days = new Set(rows.map((item) => item.date)).size;
+  $("#active-days").textContent = plural(days, "dia", "dias");
+  $("#activity-description").textContent =
+    `${plural(rows.length, "lançamento registrado", "lançamentos registrados")} no período`;
+  if (state.view !== "transactions") renderChart(rows);
   renderTransactions(rows);
 }
 
@@ -464,7 +500,11 @@ function buildSeries(rows) {
     const day = start + Math.round(((end - start) * i) / (count - 1));
     while (cursor < sorted.length && dayNumber(sorted[cursor].date) <= day) {
       const item = sorted[cursor++];
-      value += item.type === "RECEITA" ? item.cents : -item.cents;
+      if (state.chartMetric === "income")
+        value += item.type === "RECEITA" ? item.cents : 0n;
+      else if (state.chartMetric === "expenses")
+        value += item.type === "DESPESA" ? item.cents : 0n;
+      else value += item.type === "RECEITA" ? item.cents : -item.cents;
     }
     points.push({ day, value });
   }
@@ -474,17 +514,33 @@ function buildSeries(rows) {
 function renderChart(rows) {
   const svg = $("#flow-chart");
   const width = Math.max(260, $("#chart-wrap").clientWidth);
-  const height = 210;
-  const left = 48;
-  const right = 12;
-  const top = 18;
-  const bottom = 18;
+  const height = svg.clientHeight || 210;
+  const left = width < 400 ? 42 : 52;
+  const right = 13;
+  const top = 14;
+  const bottom = 27;
+  const metricNames = {
+    balance: "Evolução do saldo",
+    income: "Entradas acumuladas",
+    expenses: "Saídas acumuladas",
+  };
+  const title = metricNames[state.chartMetric];
+  $("#chart-title").textContent = title;
+  const hasFuture = rows.some((item) => item.date > todayISO());
+  $("#chart-subtitle").textContent = hasFuture
+    ? "Inclui lançamentos futuros, em tracejado"
+    : "Resultado acumulado dos seus lançamentos";
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.setAttribute("aria-describedby", "chart-description");
+  svg.setAttribute(
+    "aria-label",
+    `${title}, em reais. Use as setas para explorar os dias.`,
+  );
   svg.replaceChildren();
   $("#chart-tooltip").hidden = true;
   const points = buildSeries(rows);
   state.chart = points;
+  state.chartIndex = undefined;
   $("#chart-empty").hidden = points.length > 0;
   $("#chart-start").textContent = points.length
     ? shortDateFormatter.format(dayDate(points[0].day))
@@ -500,22 +556,30 @@ function renderChart(rows) {
     (value, point) => (point.value > value ? point.value : value),
     0n,
   );
-  if (high === low) high = low + 100n;
+  if (high === low) high = low + 10000n;
+  // Eixos redondos em centavos inteiros: nenhuma conta monetária depende de float.
+  const target = (high - low + 3n) / 4n;
+  const magnitude = 10n ** BigInt(Math.max(0, String(target).length - 1));
+  const step = [1n, 2n, 5n, 10n]
+    .map((n) => n * magnitude)
+    .find((n) => n >= target);
+  low = low >= 0n ? (low / step) * step : -(((-low + step - 1n) / step) * step);
+  high =
+    high >= 0n ? ((high + step - 1n) / step) * step : -((-high / step) * step);
   const range = high - low;
   const y = (value) =>
     top +
     (1 - Number(((value - low) * 100000n) / range) / 100000) *
       (height - top - bottom);
-  for (let index = 0; index < 4; index++) {
-    const value = high - (range * BigInt(index)) / 3n;
-    const position = top + (index * (height - top - bottom)) / 3;
+  for (let value = low; value <= high; value += step) {
+    const position = y(value);
     svg.append(
       svgNode("line", {
         x1: left,
         x2: width - right,
         y1: position,
         y2: position,
-        class: "chart-grid",
+        class: `chart-grid${value === 0n && low < 0n ? " chart-zero" : ""}`,
       }),
     );
     const label = state.hidden
@@ -528,8 +592,8 @@ function renderChart(rows) {
       svgNode(
         "text",
         {
-          x: left - 8,
-          y: position + 3,
+          x: left - 9,
+          y: position + 4,
           "text-anchor": "end",
           class: "chart-axis",
         },
@@ -545,39 +609,42 @@ function renderChart(rows) {
     point.x = left + (index * (width - left - right)) / (points.length - 1);
     point.y = y(point.value);
   });
-  const defs = svgNode("defs");
-  const gradient = svgNode("linearGradient", {
-    id: "flow-fill",
-    x1: "0",
-    y1: "0",
-    x2: "0",
-    y2: "1",
-  });
-  gradient.append(
-    svgNode("stop", {
-      offset: "0%",
-      "stop-color": "var(--plot)",
-      "stop-opacity": ".2",
-    }),
-    svgNode("stop", {
-      offset: "100%",
-      "stop-color": "var(--plot)",
-      "stop-opacity": "0",
-    }),
+  const toPath = (series) =>
+    series
+      .map((point, index) => `${index ? "L" : "M"}${point.x},${point.y}`)
+      .join(" ");
+  const firstFuture = points.findIndex(
+    (point) => point.day > dayNumber(todayISO()),
   );
-  defs.append(gradient);
-  svg.append(defs);
-  const line = points
-    .map((point, index) => `${index ? "L" : "M"}${point.x},${point.y}`)
-    .join(" ");
-  svg.append(
-    svgNode("path", {
-      d: `${line} L${points.at(-1).x},${y(0n)} L${points[0].x},${y(0n)} Z`,
-      fill: "url(#flow-fill)",
-      class: "chart-area",
-    }),
-    svgNode("path", { d: line, class: "chart-line" }),
-  );
+  const recorded = firstFuture === -1 ? points : points.slice(0, firstFuture);
+  if (recorded.length)
+    svg.append(svgNode("path", { d: toPath(recorded), class: "chart-line" }));
+  if (firstFuture !== -1)
+    svg.append(
+      svgNode("path", {
+        d: toPath(points.slice(Math.max(0, firstFuture - 1))),
+        class: `chart-line chart-future${recorded.length ? "" : " chart-only-future"}`,
+      }),
+    );
+  for (let tick = 0; tick < 4; tick++) {
+    const index = Math.round((tick * (points.length - 1)) / 3);
+    const point = points[index];
+    svg.append(
+      svgNode(
+        "text",
+        {
+          x: point.x,
+          y: height - 5,
+          "text-anchor": tick === 0 ? "start" : tick === 3 ? "end" : "middle",
+          class: "chart-axis chart-x-axis",
+        },
+        shortDateFormatter
+          .format(dayDate(point.day))
+          .replaceAll(" de ", " ")
+          .replaceAll(".", ""),
+      ),
+    );
+  }
   svg.append(
     svgNode("line", {
       id: "chart-cursor",
@@ -597,10 +664,10 @@ function renderChart(rows) {
     }),
   );
   $("#chart-description").textContent =
-    `Resultado acumulado no período: ${formatMoney(points.at(-1).value)}. Use as setas para explorar as datas.`;
+    `${title}: ${formatMoney(points.at(-1).value)} ao final do período. ${hasFuture ? "O tracejado representa lançamentos com data futura, não uma previsão. " : ""}Use as setas para explorar as datas.`;
   dashboardMotion.chart(
     svg,
-    `${width}:${points.map((point) => `${point.day}:${point.value}`).join("|")}`,
+    `${state.chartMetric}:${width}:${height}:${points.map((point) => `${point.day}:${point.value}`).join("|")}`,
   );
 }
 
@@ -638,13 +705,14 @@ function openTransaction(type = "RECEITA", id = null) {
   $("#amount-input").setCustomValidity("");
   $("#form-error").hidden = true;
   $("#dialog-title").textContent =
-    id === null ? "Nova transação." : "Editar transação.";
+    id === null ? "Nova transação" : "Editar transação";
   $("#transaction-form").elements.type.value = item?.type ?? type;
   $("#description-input").value = item?.description ?? "";
   $("#date-input").value = item?.date ?? todayISO();
   $("#amount-input").value = item
     ? centsToDecimal(item.cents).replace(".", ",")
     : "";
+  setFormBusy(false);
   $("#transaction-dialog").showModal();
   requestAnimationFrame(() => $("#amount-input").focus());
 }
@@ -711,7 +779,9 @@ function setFormBusy(busy) {
   $("#cancel-dialog").disabled = busy;
   $("#save-transaction span").textContent = busy
     ? "Salvando…"
-    : "Salvar transação";
+    : state.editingId === null
+      ? "Salvar transação"
+      : "Salvar alterações";
 }
 
 function openDelete(id) {
@@ -846,6 +916,32 @@ $("#theme-toggle").addEventListener("click", () =>
 $("#privacy-toggle").addEventListener("click", () => setPrivacy(!state.hidden));
 $("#refresh-button").addEventListener("click", refresh);
 $("#retry-button").addEventListener("click", refresh);
+document.querySelectorAll("[data-metric]").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.chartMetric = button.dataset.metric;
+    document
+      .querySelectorAll("[data-metric]")
+      .forEach((tab) =>
+        tab.setAttribute("aria-pressed", String(tab === button)),
+      );
+    if (state.loaded) renderChart(periodRows());
+  });
+});
+$("#review-expenses").addEventListener("click", () => {
+  state.type = "DESPESA";
+  state.search = "";
+  state.page = 0;
+  $("#transaction-search").value = "";
+  document
+    .querySelectorAll("[data-type]")
+    .forEach((button) =>
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.type === "DESPESA"),
+      ),
+    );
+  if (state.loaded) renderTransactions(periodRows());
+});
 $("#period-select").addEventListener("change", (event) => {
   state.period = event.target.value;
   state.page = 0;
@@ -956,6 +1052,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "/") {
     event.preventDefault();
+    if (state.view !== "transactions") navigate("transactions", false);
     $("#transaction-search").focus();
   }
 });
@@ -966,37 +1063,59 @@ window.addEventListener("resize", () => {
     if (state.loaded) renderChart(periodRows());
   }, 100);
 });
-function activateNavigation(id) {
+// 07. Navegação nativa por hash: voltar/avançar funciona e os filtros sobrevivem.
+function applyView(id, focus = false) {
+  const descriptions = {
+    overview: ["Visão geral", "Seu dinheiro, visto com clareza."],
+    transactions: ["Transações", "Cada movimento, no seu lugar."],
+    flow: ["Análise do fluxo", "Entenda o caminho do seu dinheiro."],
+  };
+  if (!Object.hasOwn(descriptions, id)) id = "overview";
+  const changed = state.view !== id;
+  state.view = id;
+  $(".workspace").dataset.view = id;
+  $("#page-title").textContent = descriptions[id][0];
+  $("#page-description").textContent = descriptions[id][1];
+  $("#analysis-details").hidden = id !== "flow";
+  $("#transactions-title").textContent =
+    id === "transactions" ? "Histórico de transações" : "Movimentos do período";
+  document.title = `financeFlow — ${descriptions[id][0]}`;
   document.querySelectorAll(".nav-link").forEach((link) => {
     const active = link.hash === `#${id}`;
     link.classList.toggle("active", active);
-    if (active) link.setAttribute("aria-current", "location");
+    if (active) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
+  if (state.loaded && id !== "transactions") renderChart(periodRows());
+  if (changed) dashboardMotion.view($(".workspace"));
+  window.scrollTo({ top: 0, behavior: "instant" });
+  if (focus) $("#page-title").focus({ preventScroll: true });
 }
-document
-  .querySelectorAll(".nav-link")
-  .forEach((link) =>
-    link.addEventListener("click", () =>
-      activateNavigation(link.hash.slice(1)),
-    ),
-  );
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    for (const entry of entries)
-      if (entry.isIntersecting)
-        activateNavigation(
-          entry.target.classList.contains("intro")
-            ? "overview"
-            : entry.target.id,
-        );
-  },
-  { rootMargin: "-10% 0px -65% 0px" },
+function navigate(id, focus = true) {
+  if (location.hash !== `#${id}`) history.pushState(null, "", `#${id}`);
+  applyView(id, focus);
+}
+document.addEventListener("click", (event) => {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.shiftKey ||
+    event.altKey
+  )
+    return;
+  const link = event.target.closest('a[href^="#"]');
+  if (!link || !["#overview", "#transactions", "#flow"].includes(link.hash))
+    return;
+  event.preventDefault();
+  navigate(link.hash.slice(1));
+});
+window.addEventListener("hashchange", () =>
+  applyView(location.hash.slice(1), true),
 );
-for (const element of [$(".intro"), $("#flow"), $("#transactions")])
-  sectionObserver.observe(element);
 
-// 07. Inicialização: preferências, data local e primeiro GET.
+// 08. Inicialização: preferências, data local e primeiro GET.
 $("#today-label").textContent = new Intl.DateTimeFormat("pt-BR", {
   day: "2-digit",
   month: "short",
@@ -1006,4 +1125,5 @@ setTheme(
   readPreference("financeflow-theme", "dark") === "light" ? "light" : "dark",
 );
 setPrivacy(readPreference("financeflow-private", "false") === "true");
+applyView(location.hash.slice(1));
 refresh();

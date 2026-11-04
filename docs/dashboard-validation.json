@@ -1,0 +1,117 @@
+{
+  "at": "2026-11-04T00:10:35.908765+00:00",
+  "style": {
+    "name": "True-black flat",
+    "seed": 1458210553,
+    "font": "Inter local",
+    "allowed": [
+      "gradient: aurora aprovada pelo usuário"
+    ]
+  },
+  "backend": {
+    "unit": 17,
+    "integration": 17,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "ui": {
+    "functional": [
+      "indicadores reais e paginação inicial",
+      "busca, filtros por tipo, ordenação, páginas e vazio filtrado",
+      "exploração do gráfico por teclado",
+      "tema e privacidade persistidos entre recargas",
+      "cadastro, edição, validação de zero, cancelamento e confirmação da exclusão no PostgreSQL",
+      "filtro temporal e totais correspondentes",
+      "erro de API mantém os últimos dados e permite tentar novamente",
+      "histórico vazio e indicadores zerados sem dados fictícios",
+      "descrições são texto e não executam HTML",
+      "valor de 17 dígitos e centavos preservado sem arredondamento no cliente",
+      "falha no salvamento preserva o formulário",
+      "seis larguras de tela, modal mobile, foco e Escape"
+    ],
+    "motion": [
+      "aurora em movimento contínuo real",
+      "luz e profundidade pelo cursor, sem loop JavaScript em repouso",
+      "pausa manual persistida e retomada sem repetir entradas da página",
+      "gráfico desenhado progressivamente e privacidade aplicada sem animação dos valores",
+      "FLIP na ordenação e indicador deslizante nos filtros",
+      "entrada e saída nativas do dialog com foco correto",
+      "cadastro real com animação normal, fechamento e feedback",
+      "View Transitions no tema e fallback sem a API",
+      "seis larguras sem rolagem horizontal com o fundo em movimento",
+      "movimento reduzido pelo sistema e formulário em dispositivo touch"
+    ],
+    "new_interactions": [
+      "Inter carregada localmente, sem requisições a fontes ou serviços externos",
+      "três vistas, foco no título, endereço compartilhável, voltar/avançar e busca preservada",
+      "três séries com acumulados reais, quatro datas no eixo, maior saída, média arredondada e dias ativos",
+      "privacidade também protege taxa de economia, comparativos e novos indicadores, inclusive após recarregar",
+      "revisão de saídas, atalhos N e / entre vistas, Escape e rota desconhecida segura",
+      "lançamentos futuros identificados em tracejado, despesas sem receita e análise vazia sem valores inventados",
+      "as três vistas em seis larguras, sem overflow, e cinco auditorias WCAG sem violações",
+      "links diretos começam no topo e datas do gráfico não colidem em 390 e 320 px"
+    ],
+    "page_errors": []
+  },
+  "accessibility": [
+    {
+      "view": "overview",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "view": "transactions",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "view": "flow",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "view": "overview",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "view": "form",
+      "theme": "light",
+      "violations": []
+    }
+  ],
+  "visual": [
+    {
+      "view": "overview",
+      "widths": [
+        1440,
+        768,
+        390
+      ],
+      "fail": 0,
+      "warn": 0
+    },
+    {
+      "view": "transactions",
+      "widths": [
+        1440,
+        768,
+        390
+      ],
+      "fail": 0,
+      "warn": 0
+    },
+    {
+      "view": "analysis",
+      "widths": [
+        1440,
+        768,
+        390
+      ],
+      "fail": 0,
+      "warn": 0
+    }
+  ],
+  "artifact": "JAR executado, recursos estáticos comparados byte a byte"
+}

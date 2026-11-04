@@ -19,9 +19,8 @@ const dashboardMotion = (() => {
   let pointerY = 0;
   let targetX = 0;
   let targetY = 0;
-  let pointerClientX = 0;
-  let pointerClientY = 0;
   let hoveredPanel = null;
+  let viewAnimation = null;
 
   try {
     userEnabled = localStorage.getItem("financeflow-motion") !== "off";
@@ -161,7 +160,7 @@ const dashboardMotion = (() => {
     chartSignatures.set(svg, signature);
     if (!canAnimate() || previous === signature) return;
     const path = svg.querySelector(".chart-line");
-    if (!path) return;
+    if (!path || path.classList.contains("chart-only-future")) return;
     const length = path.getTotalLength();
     if (!Number.isFinite(length) || length <= 0) return;
     animate(
@@ -201,6 +200,19 @@ const dashboardMotion = (() => {
     );
     if (animation) toastAnimations.set(element, animation);
     return animation;
+  }
+
+  // Trocas rápidas de vista cancelam a entrada anterior, sem prender a navegação.
+  function view(element) {
+    viewAnimation?.cancel();
+    viewAnimation = animate(
+      element,
+      [
+        { opacity: 0.65, transform: "translateY(6px)" },
+        { opacity: 1, transform: "translateY(0)" },
+      ],
+      { duration: 240 },
+    );
   }
 
   // View Transitions é uma melhoria progressiva: o tema funciona sem essa API.
@@ -248,19 +260,8 @@ const dashboardMotion = (() => {
     const smoothing = 1 - Math.exp(-elapsed / 150);
     pointerX += (targetX - pointerX) * smoothing;
     pointerY += (targetY - pointerY) * smoothing;
-    const rect = hoveredPanel?.getBoundingClientRect();
     ambient?.style.setProperty("--ambient-x", `${pointerX.toFixed(2)}px`);
     ambient?.style.setProperty("--ambient-y", `${pointerY.toFixed(2)}px`);
-    if (rect) {
-      hoveredPanel.style.setProperty(
-        "--light-x",
-        `${pointerClientX - rect.left}px`,
-      );
-      hoveredPanel.style.setProperty(
-        "--light-y",
-        `${pointerClientY - rect.top}px`,
-      );
-    }
     if (Math.abs(targetX - pointerX) + Math.abs(targetY - pointerY) > 0.05)
       pointerFrame = requestAnimationFrame(movePointer);
     else lastPointerFrame = 0;
@@ -283,8 +284,6 @@ const dashboardMotion = (() => {
         return;
       targetX = (event.clientX / innerWidth - 0.5) * 16;
       targetY = (event.clientY / innerHeight - 0.5) * 12;
-      pointerClientX = event.clientX;
-      pointerClientY = event.clientY;
       const panel = event.target.closest(".panel");
       if (panel !== hoveredPanel) {
         hoveredPanel?.classList.remove("is-pointer-inside");
@@ -352,6 +351,7 @@ const dashboardMotion = (() => {
     theme,
     applyTheme,
     privacy,
+    view,
     enabled,
   };
 })();

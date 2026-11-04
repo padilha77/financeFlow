@@ -3,23 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#10191a" />
+    <meta name="theme-color" content="#0c100e" />
     <meta
       name="description"
       content="Seu dinheiro, com clareza. Um espaço para acompanhar suas receitas, despesas e próximos passos."
     />
-    <title>financeFlow — Seu dinheiro em boa órbita</title>
+    <title>financeFlow — Seu dinheiro, com clareza</title>
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%2310191a'/%3E%3Cg fill='%23b5edcb'%3E%3Crect x='9' y='20' width='5' height='12' rx='2'/%3E%3Crect x='18' y='13' width='5' height='19' rx='2'/%3E%3Crect x='27' y='6' width='5' height='26' rx='2'/%3E%3C/g%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="/css/styles.css?v=4" />
-    <link rel="stylesheet" href="/css/motion.css?v=4" />
-    <script src="/js/motion.js?v=4" defer></script>
-    <script src="/js/app.js?v=4" defer></script>
+    <link
+      rel="preload"
+      href="/fonts/Inter-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/css/styles.css?v=5" />
+    <link rel="stylesheet" href="/css/motion.css?v=5" />
+    <script src="/js/motion.js?v=5" defer></script>
+    <script src="/js/app.js?v=5" defer></script>
   </head>
   <body>
-    <!-- 01. Ícones locais: o painel funciona sem bibliotecas ou fontes externas. -->
+    <!-- 01. Ícones e fonte locais: sem dependências externas durante o uso. -->
     <svg
       class="icon-definitions"
       aria-hidden="true"
@@ -111,67 +118,37 @@
     <div class="ambient" aria-hidden="true">
       <span></span><span></span><span></span>
     </div>
+    <a class="skip-link" href="#page-title">Ir para o conteúdo</a>
     <div class="app-shell">
-      <!-- 02. Navegação e atalhos que abrem o formulário real. -->
-      <aside class="sidebar">
-        <a class="brand" href="#overview" aria-label="financeFlow, visão geral">
-          <span class="brand-mark" aria-hidden="true"
-            ><i></i><i></i><i></i
-          ></span>
-          <span
-            >finance<span class="brand-light">Flow</span
-            ><small>MAIS LEVE. MAIS SEU.</small></span
+      <!-- 02. Três vistas reais; o endereço e os botões voltar/avançar acompanham a navegação. -->
+      <header class="app-header">
+        <div class="header-inner">
+          <a
+            class="brand"
+            href="#overview"
+            aria-label="financeFlow, visão geral"
           >
-        </a>
-        <p class="side-label">SEU ESPAÇO</p>
-        <nav class="navigation" aria-label="Navegação principal">
-          <a href="#overview" class="nav-link active" aria-current="location"
-            ><svg class="icon"><use href="#i-grid" /></svg
-            ><span>Visão geral</span><b></b
-          ></a>
-          <a href="#flow" class="nav-link"
-            ><svg class="icon"><use href="#i-flow" /></svg><span>Seu fluxo</span
-            ><b></b
-          ></a>
-          <a href="#transactions" class="nav-link"
-            ><svg class="icon"><use href="#i-list" /></svg
-            ><span>Transações</span><b></b
-          ></a>
-        </nav>
-        <div class="side-shortcuts">
-          <p class="side-label">PEQUENOS ATALHOS</p>
-          <button type="button" class="shortcut" data-new="RECEITA">
-            <span class="shortcut-icon income"
-              ><svg class="icon"><use href="#i-in" /></svg></span
-            ><span>Registrar entrada<small>Uma nova possibilidade.</small></span
-            ><svg class="icon tiny"><use href="#i-plus" /></svg>
-          </button>
-          <button type="button" class="shortcut" data-new="DESPESA">
-            <span class="shortcut-icon expense"
-              ><svg class="icon"><use href="#i-out" /></svg></span
-            ><span>Registrar saída<small>Cada escolha conta.</small></span
-            ><svg class="icon tiny"><use href="#i-plus" /></svg>
-          </button>
-        </div>
-        <div class="sidebar-bottom">
-          <span class="little-orbit" aria-hidden="true"
-            ><svg class="icon"><use href="#i-spark" /></svg
-          ></span>
-          <p>Clareza hoje.<br /><strong>Mais liberdade amanhã.</strong></p>
-          <span class="sidebar-version"
-            >financeFlow · seu espaço financeiro</span
-          >
-        </div>
-      </aside>
-
-      <main class="workspace" id="overview">
-        <header class="topbar">
-          <div class="breadcrumb">
-            <span>Seu espaço</span><span>/</span><strong>Visão geral</strong>
-          </div>
+            <span class="brand-mark" aria-hidden="true"
+              ><i></i><i></i><i></i
+            ></span>
+            <span>finance<span class="brand-light">Flow</span></span>
+          </a>
+          <nav class="navigation" aria-label="Navegação principal">
+            <a href="#overview" class="nav-link active" aria-current="page"
+              ><svg class="icon" aria-hidden="true"><use href="#i-grid" /></svg
+              ><span>Visão geral</span></a
+            >
+            <a href="#transactions" class="nav-link"
+              ><svg class="icon" aria-hidden="true"><use href="#i-list" /></svg
+              ><span>Transações</span></a
+            >
+            <a href="#flow" class="nav-link"
+              ><svg class="icon" aria-hidden="true"><use href="#i-flow" /></svg
+              ><span>Análise</span></a
+            >
+          </nav>
           <div class="top-actions">
-            <span id="today-label" class="today-label"></span
-            ><button
+            <button
               type="button"
               id="privacy-toggle"
               class="icon-button"
@@ -179,8 +156,9 @@
               aria-pressed="false"
               title="Ocultar valores"
             >
-              <svg class="icon"><use href="#i-eye" /></svg></button
-            ><button
+              <svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg>
+            </button>
+            <button
               type="button"
               id="motion-toggle"
               class="icon-button"
@@ -188,27 +166,29 @@
               aria-pressed="false"
               title="Pausar animações"
             >
-              <svg class="icon"><use href="#i-pause" /></svg></button
-            ><button
+              <svg class="icon" aria-hidden="true"><use href="#i-pause" /></svg>
+            </button>
+            <button
               type="button"
               id="theme-toggle"
               class="icon-button"
               aria-label="Ativar tema claro"
               title="Ativar tema claro"
             >
-              <svg class="icon"><use href="#i-sun" /></svg>
+              <svg class="icon" aria-hidden="true"><use href="#i-sun" /></svg>
             </button>
           </div>
-        </header>
-
+        </div>
+      </header>
+      <main class="workspace" data-view="overview">
         <section class="intro" aria-labelledby="page-title">
           <div>
-            <p class="eyebrow"><span></span> UM NOVO OLHAR PARA SEU DINHEIRO</p>
-            <h1 id="page-title">
-              Sua vida financeira,<br /><em>em boa órbita.</em>
-            </h1>
-            <p class="intro-description">
-              Menos ruído. Mais clareza para os seus próximos passos.
+            <div class="title-line">
+              <h1 id="page-title" tabindex="-1">Visão geral</h1>
+              <span id="today-label" class="today-label"></span>
+            </div>
+            <p class="intro-description" id="page-description">
+              Seu dinheiro, visto com clareza.
             </p>
           </div>
           <button
@@ -216,33 +196,38 @@
             class="button button-primary"
             data-new="RECEITA"
           >
-            <svg class="icon"><use href="#i-plus" /></svg> Nova transação
-            <kbd>N</kbd>
+            <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg
+            ><span>Nova transação</span><kbd>N</kbd>
           </button>
         </section>
-
         <div class="dashboard-controls">
           <div class="sync-state" id="sync-state" role="status">
-            <span class="status-dot"></span
-            ><span id="sync-label">Preparando seu espaço…</span>
+            <span class="status-dot" aria-hidden="true"></span
+            ><span id="sync-label">Carregando seus dados…</span>
           </div>
           <div class="period-control">
-            <svg class="icon"><use href="#i-calendar" /></svg
-            ><label for="period-select" class="sr-only"
+            <svg class="icon" aria-hidden="true">
+              <use href="#i-calendar" />
+            </svg>
+            <label for="period-select" class="sr-only"
               >Período do dashboard</label
-            ><select id="period-select">
+            >
+            <select id="period-select">
               <option value="all">Todo o período</option>
               <option value="month">Este mês</option>
               <option value="previous">Mês anterior</option>
-              <option value="last90">Últimos 90 dias</option></select
-            ><button
+              <option value="last90">Últimos 90 dias</option>
+            </select>
+            <button
               type="button"
               id="refresh-button"
               class="icon-button"
               title="Atualizar dados"
               aria-label="Atualizar dados"
             >
-              <svg class="icon"><use href="#i-refresh" /></svg>
+              <svg class="icon" aria-hidden="true">
+                <use href="#i-refresh" />
+              </svg>
             </button>
           </div>
         </div>
@@ -253,105 +238,104 @@
           </button>
         </div>
 
-        <!-- 03. Indicadores: todos usam dados reais, no período selecionado. -->
+        <!-- 03. Um conjunto de indicadores; o saldo é sempre receitas menos despesas. -->
         <section class="overview-grid" aria-label="Resumo financeiro">
           <article class="balance-card panel">
-            <div class="balance-copy">
-              <div class="balance-label">
-                <span class="round-icon"
-                  ><svg class="icon"><use href="#i-wallet" /></svg
-                ></span>
-                <h2>Saldo do período</h2>
-                <span class="currency-badge">BRL</span>
-              </div>
-              <p class="balance-value money" id="balance">—</p>
-              <p class="balance-note">
-                Um panorama do que entrou e do que saiu.
-              </p>
-              <div class="balance-bottom">
-                <span class="soft-tag" id="balance-message"
-                  >Seu próximo passo começa aqui</span
-                ><span class="balance-decoration" aria-hidden="true"
-                  ><svg class="icon"><use href="#i-out" /></svg
-                ></span>
-              </div>
+            <div class="balance-label">
+              <h2>Saldo do período</h2>
+              <span class="currency-badge">Em reais</span>
             </div>
-            <figure class="savings-orbit">
-              <div class="orbit-decoration" aria-hidden="true"></div>
-              <svg viewBox="0 0 180 180" class="orbit-svg" aria-hidden="true">
-                <defs>
-                  <linearGradient
-                    id="orbit-gradient"
-                    x1="0"
-                    y1="0"
-                    x2="1"
-                    y2="1"
-                  >
-                    <stop stop-color="#dcffce" />
-                    <stop offset="1" stop-color="#75dac9" />
-                  </linearGradient>
-                </defs>
-                <circle class="orbit-track" cx="90" cy="90" r="68" />
-                <circle
-                  class="orbit-progress"
-                  id="savings-progress"
-                  cx="90"
-                  cy="90"
-                  r="68"
-                  pathLength="100"
-                  stroke-dasharray="100"
-                  stroke-dashoffset="100"
-                />
-              </svg>
-              <figcaption>
-                <strong id="savings-rate">—</strong
-                ><span>das receitas<br />ficaram com você</span>
-              </figcaption>
-            </figure>
+            <p class="balance-value money" id="balance">—</p>
+            <div class="balance-bottom">
+              <span class="balance-note">Receitas − despesas</span
+              ><span id="balance-message" class="balance-message"
+                >Aguardando seus dados</span
+              >
+            </div>
           </article>
-          <div class="side-stats">
-            <article class="stat-card panel">
-              <div>
-                <span class="stat-label">Receitas</span
-                ><span class="metric-icon income"
-                  ><svg class="icon"><use href="#i-in" /></svg
-                ></span>
-              </div>
-              <p class="stat-value money" id="income">—</p>
-              <p class="stat-foot">
-                <span class="small-dot income"></span
-                ><span id="income-count">Entradas no período</span>
-              </p>
-            </article>
-            <article class="stat-card panel">
-              <div>
-                <span class="stat-label">Despesas</span
-                ><span class="metric-icon expense"
-                  ><svg class="icon"><use href="#i-out" /></svg
-                ></span>
-              </div>
-              <p class="stat-value money" id="expenses">—</p>
-              <p class="stat-foot">
-                <span class="small-dot expense"></span
-                ><span id="expenses-count">Saídas no período</span>
-              </p>
-            </article>
-          </div>
+          <article class="stat-card panel">
+            <div class="stat-heading">
+              <h2>Receitas</h2>
+              <svg class="icon income" aria-hidden="true">
+                <use href="#i-in" />
+              </svg>
+            </div>
+            <p class="stat-value money" id="income">—</p>
+            <div class="stat-foot">
+              <span id="income-count">Entradas no período</span
+              ><button
+                type="button"
+                class="quiet-action"
+                data-new="RECEITA"
+                title="Registrar entrada"
+                aria-label="Registrar entrada"
+              >
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-plus" />
+                </svg>
+              </button>
+            </div>
+          </article>
+          <article class="stat-card panel">
+            <div class="stat-heading">
+              <h2>Despesas</h2>
+              <svg class="icon expense" aria-hidden="true">
+                <use href="#i-out" />
+              </svg>
+            </div>
+            <p class="stat-value money" id="expenses">—</p>
+            <div class="stat-foot">
+              <span id="expenses-count">Saídas no período</span
+              ><button
+                type="button"
+                class="quiet-action"
+                data-new="DESPESA"
+                title="Registrar saída"
+                aria-label="Registrar saída"
+              >
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-plus" />
+                </svg>
+              </button>
+            </div>
+          </article>
         </section>
 
-        <!-- 04. Gráfico SVG interativo, construído a partir das transações. -->
+        <!-- 04. Gráfico explorável: cada aba muda a série, sem inventar previsões. -->
         <section
           class="flow-grid"
-          id="flow"
-          aria-label="Visualização do fluxo financeiro"
+          id="flow-panel"
+          aria-label="Análise do fluxo financeiro"
         >
           <article class="chart-card panel">
-            <div class="section-heading">
+            <div class="section-heading chart-heading">
               <div>
-                <p class="eyebrow">OS SEUS MOVIMENTOS</p>
-                <h2>Seu fluxo, dia a dia<span class="heading-dot">.</span></h2>
+                <h2 id="chart-title">Evolução do saldo</h2>
+                <p class="section-description" id="chart-subtitle">
+                  Resultado acumulado dos seus lançamentos
+                </p>
               </div>
-              <span class="chart-legend"><i></i> Resultado acumulado</span>
+              <div
+                class="chart-tabs"
+                role="group"
+                aria-label="Série do gráfico"
+              >
+                <button type="button" data-metric="balance" aria-pressed="true">
+                  Saldo</button
+                ><button
+                  type="button"
+                  data-metric="income"
+                  aria-pressed="false"
+                >
+                  Entradas</button
+                ><button
+                  type="button"
+                  data-metric="expenses"
+                  aria-pressed="false"
+                >
+                  Saídas
+                </button>
+              </div>
             </div>
             <div class="chart-wrap" id="chart-wrap">
               <svg
@@ -359,7 +343,7 @@
                 viewBox="0 0 760 210"
                 role="img"
                 tabindex="0"
-                aria-label="Fluxo financeiro. Use as setas para explorar os dias."
+                aria-label="Evolução financeira. Use as setas para explorar os dias."
               ></svg>
               <div class="chart-tooltip" id="chart-tooltip" hidden>
                 <span id="chart-tooltip-date"></span
@@ -370,57 +354,115 @@
               </p>
             </div>
             <div class="chart-footer">
-              <span id="chart-start">—</span
+              <span class="chart-range"
+                ><span id="chart-start">—</span> —
+                <span id="chart-end">—</span></span
               ><span class="chart-help"
-                >Passe o cursor ou use as setas para explorar</span
-              ><span id="chart-end">—</span>
+                >Explore com o cursor ou as setas
+                <span aria-hidden="true">← →</span></span
+              >
             </div>
             <p class="sr-only" id="chart-description"></p>
           </article>
           <article class="insight-card panel">
-            <p class="eyebrow">UMA OUTRA PERSPECTIVA</p>
-            <h2>
-              O equilíbrio<br />do seu fluxo<span class="heading-dot">.</span>
-            </h2>
+            <div class="section-heading">
+              <h2>O que ficou com você</h2>
+              <svg class="icon insight-icon" aria-hidden="true">
+                <use href="#i-wallet" />
+              </svg>
+            </div>
+            <div class="savings-summary">
+              <figure class="savings-orbit">
+                <svg viewBox="0 0 120 120" class="orbit-svg" aria-hidden="true">
+                  <circle class="orbit-track" cx="60" cy="60" r="50" />
+                  <circle
+                    class="orbit-progress"
+                    id="savings-progress"
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    pathLength="100"
+                    stroke-dasharray="100"
+                    stroke-dashoffset="100"
+                  />
+                </svg>
+                <figcaption>
+                  <strong id="savings-rate">—</strong><span>do que entrou</span>
+                </figcaption>
+              </figure>
+              <p class="insight-text" id="insight-text">
+                Registre seus movimentos para conhecer seu equilíbrio.
+              </p>
+            </div>
             <div class="flow-comparison">
-              <div>
-                <span><i class="small-dot income"></i> Entradas</span
+              <div class="comparison-line">
+                <span>Entradas</span
                 ><strong id="comparison-income" class="money">—</strong>
               </div>
               <div class="bar-track">
                 <span id="income-bar" class="income-bar"></span>
               </div>
-              <div>
-                <span><i class="small-dot expense"></i> Saídas</span
+              <div class="comparison-line">
+                <span>Saídas</span
                 ><strong id="comparison-expenses" class="money">—</strong>
               </div>
               <div class="bar-track">
                 <span id="expense-bar" class="expense-bar"></span>
               </div>
             </div>
-            <p class="insight-text" id="insight-text">
-              Um pouco de clareza muda a forma de olhar para o amanhã.
+            <a
+              href="#transactions"
+              id="review-expenses"
+              class="text-button insight-link"
+              >Revisar minhas saídas<svg class="icon" aria-hidden="true">
+                <use href="#i-chevron" /></svg
+            ></a>
+          </article>
+        </section>
+        <section
+          class="analysis-details"
+          id="analysis-details"
+          aria-label="Detalhes do período"
+          hidden
+        >
+          <article class="detail-card panel">
+            <h2>Maior saída</h2>
+            <p class="detail-value money" id="largest-expense">—</p>
+            <p class="section-description" id="largest-description">
+              Nenhuma saída no período
             </p>
-            <span class="insight-spark" aria-hidden="true"
-              ><svg class="icon"><use href="#i-spark" /></svg
-            ></span>
+          </article>
+          <article class="detail-card panel">
+            <h2>Média por saída</h2>
+            <p class="detail-value money" id="average-expense">—</p>
+            <p class="section-description">
+              Total de saídas ÷ número de lançamentos
+            </p>
+          </article>
+          <article class="detail-card panel">
+            <h2>Dias com movimento</h2>
+            <p class="detail-value" id="active-days">—</p>
+            <p class="section-description" id="activity-description">
+              No período selecionado
+            </p>
           </article>
         </section>
 
-        <!-- 05. Busca, filtros, ordenação, paginação e ações por registro. -->
+        <!-- 05. A lista preserva busca, filtros, ordenação, paginação, edição e exclusão. -->
         <section
           class="transactions-panel panel"
-          id="transactions"
+          id="transactions-panel"
           aria-labelledby="transactions-title"
         >
           <div class="section-heading">
-            <div>
-              <p class="eyebrow">CADA MOVIMENTO CONTA</p>
-              <h2 id="transactions-title">
-                Seu histórico<span class="heading-dot">.</span>
-              </h2>
+            <div class="history-heading">
+              <h2 id="transactions-title">Últimos movimentos</h2>
+              <span class="count-badge" id="transactions-count">—</span>
             </div>
-            <span class="count-badge" id="transactions-count">—</span>
+            <a class="text-button all-transactions" href="#transactions"
+              >Ver histórico completo<svg class="icon" aria-hidden="true">
+                <use href="#i-chevron" /></svg
+            ></a>
           </div>
           <div class="transaction-toolbar">
             <div class="filter-tabs" role="group" aria-label="Filtrar por tipo">
@@ -434,7 +476,8 @@
             </div>
             <div class="search-sort">
               <div class="search-field">
-                <svg class="icon"><use href="#i-search" /></svg
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-search" /></svg
                 ><label for="transaction-search" class="sr-only"
                   >Buscar transação pela descrição</label
                 ><input
@@ -453,11 +496,13 @@
             </div>
           </div>
           <div class="table-labels" aria-hidden="true">
-            <span>LANÇAMENTO</span><span>DATA</span><span>VALOR</span
-            ><span>AÇÕES</span>
+            <span>Lançamento</span><span>Data</span><span>Valor</span
+            ><span>Ações</span>
           </div>
           <div class="empty-state" id="transactions-empty" hidden>
-            <span class="empty-symbol" aria-hidden="true">↗</span>
+            <svg class="icon empty-symbol" aria-hidden="true">
+              <use href="#i-list" />
+            </svg>
             <h3 id="empty-title">Um novo começo.</h3>
             <p id="empty-description">
               Seu histórico começa com o primeiro lançamento.
@@ -468,7 +513,8 @@
               id="empty-create"
               data-new="RECEITA"
             >
-              <svg class="icon"><use href="#i-plus" /></svg> Criar transação</button
+              <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg
+              >Criar transação</button
             ><button
               type="button"
               class="text-button"
@@ -492,7 +538,9 @@
                 aria-label="Página anterior"
                 disabled
               >
-                <svg class="icon flip"><use href="#i-chevron" /></svg></button
+                <svg class="icon flip" aria-hidden="true">
+                  <use href="#i-chevron" />
+                </svg></button
               ><span id="page-label">1 / 1</span
               ><button
                 type="button"
@@ -501,16 +549,26 @@
                 aria-label="Próxima página"
                 disabled
               >
-                <svg class="icon"><use href="#i-chevron" /></svg>
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-chevron" />
+                </svg>
               </button>
             </div>
           </footer>
         </section>
         <footer class="page-footer">
-          <span>Feito para dar espaço ao que importa.</span
-          ><a href="#overview"
-            >Voltar ao topo
-            <svg class="icon" aria-hidden="true"><use href="#i-out" /></svg
+          <span
+            >financeFlow<span class="footer-dot" aria-hidden="true">·</span>Seu
+            dinheiro, com clareza.</span
+          ><span class="keyboard-hint"
+            ><kbd>N</kbd> novo lançamento<span
+              class="footer-dot"
+              aria-hidden="true"
+              >·</span
+            ><kbd>/</kbd> buscar</span
+          ><a href="#overview" class="back-home"
+            >Visão geral<svg class="icon" aria-hidden="true">
+              <use href="#i-out" /></svg
           ></a>
         </footer>
       </main>
@@ -525,10 +583,7 @@
       <form id="transaction-form" novalidate>
         <div class="modal-heading">
           <div>
-            <p class="eyebrow">UM MOVIMENTO DE CADA VEZ</p>
-            <h2 id="dialog-title">
-              Nova transação<span class="heading-dot">.</span>
-            </h2>
+            <h2 id="dialog-title">Nova transação</h2>
           </div>
           <button
             type="button"
@@ -571,7 +626,7 @@
           name="description"
           type="text"
           maxlength="200"
-          placeholder="Dê um nome a esse movimento"
+          placeholder="Ex.: supermercado, salário ou aluguel"
           required
           autocomplete="off"
         />

@@ -21,7 +21,7 @@
   height: min(680px, 65vw);
   right: -6%;
   top: -19%;
-  background: radial-gradient(
+  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
     ellipse,
     rgba(120, 191, 138, 0.25),
     rgba(83, 139, 119, 0.09) 60%,
@@ -34,7 +34,7 @@
   height: min(640px, 70vw);
   left: 9%;
   top: 30%;
-  background: radial-gradient(
+  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
     ellipse,
     rgba(67, 143, 139, 0.18),
     rgba(76, 116, 144, 0.07) 60%,
@@ -49,7 +49,7 @@
   height: min(580px, 60vw);
   bottom: -20%;
   right: 5%;
-  background: radial-gradient(
+  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
     ellipse,
     rgba(200, 141, 113, 0.2),
     rgba(149, 111, 134, 0.06) 60%,
@@ -63,7 +63,7 @@ html[data-theme="light"] .ambient span {
   opacity: 0.55;
 }
 html[data-theme="light"] .ambient span:nth-child(1) {
-  background: radial-gradient(
+  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
     ellipse,
     rgba(120, 191, 138, 0.14),
     rgba(83, 139, 119, 0.04) 60%,
@@ -71,7 +71,7 @@ html[data-theme="light"] .ambient span:nth-child(1) {
   );
 }
 html[data-theme="light"] .ambient span:nth-child(2) {
-  background: radial-gradient(
+  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
     ellipse,
     rgba(67, 143, 139, 0.1),
     rgba(76, 116, 144, 0.04) 60%,
@@ -79,7 +79,7 @@ html[data-theme="light"] .ambient span:nth-child(2) {
   );
 }
 html[data-theme="light"] .ambient span:nth-child(3) {
-  background: radial-gradient(
+  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
     ellipse,
     rgba(200, 141, 113, 0.11),
     rgba(149, 111, 134, 0.03) 60%,
@@ -135,14 +135,10 @@ html:has(dialog[open]) .ambient span {
   }
 }
 
-/* 03. Luz acompanha o cursor; o conteúdo dos cards permanece estável. */
+/* 03. Feedback discreto: contraste neutro; o movimento fica no fundo. */
 .panel {
-  backdrop-filter: none;
   position: relative;
   isolation: isolate;
-  transition:
-    border-color 280ms ease,
-    box-shadow 400ms ease;
 }
 .panel-sheen {
   position: absolute;
@@ -151,25 +147,14 @@ html:has(dialog[open]) .ambient span {
   pointer-events: none;
   border-radius: inherit;
   opacity: 0;
-  background: radial-gradient(
-    290px circle at var(--light-x, 50%) var(--light-y, 50%),
-    rgba(190, 243, 210, 0.055),
-    transparent 72%
-  );
-  transition: opacity 500ms ease;
-}
-.panel.is-pointer-inside {
-  border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+  background: rgba(255, 255, 255, 0.015);
+  transition: opacity 240ms ease;
 }
 .panel.is-pointer-inside > .panel-sheen {
   opacity: 1;
 }
 html[data-theme="light"] .panel-sheen {
-  background: radial-gradient(
-    290px circle at var(--light-x, 50%) var(--light-y, 50%),
-    rgba(70, 130, 91, 0.05),
-    transparent 72%
-  );
+  background: rgba(25, 50, 30, 0.012);
 }
 .button,
 .icon-button {
@@ -181,28 +166,11 @@ html[data-theme="light"] .panel-sheen {
   transform: translateY(0) scale(0.96);
   transition-duration: 100ms;
 }
-.shortcut {
-  transition:
-    background 260ms ease,
-    transform 320ms var(--ease-fluid);
-}
-.shortcut:hover {
-  transform: translateX(3px);
-}
-.shortcut .shortcut-icon {
-  transition: transform 360ms var(--ease-fluid);
-}
-.shortcut:hover .shortcut-icon {
-  transform: translate(-1px, -1px);
-}
 .nav-link {
   transition:
     background 280ms ease,
     color 280ms ease,
     border-color 280ms ease;
-}
-.nav-link b {
-  transition: opacity 280ms ease;
 }
 .orbit-progress {
   transition: stroke-dashoffset 850ms var(--ease-fluid);
@@ -237,7 +205,6 @@ html[data-theme="light"] .panel-sheen {
 }
 .modal input:not([type="radio"]):focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 9%, transparent);
 }
 
 /* 04. O indicador desliza entre filtros, inclusive pelo teclado. */
@@ -259,14 +226,12 @@ html[data-theme="light"] .panel-sheen {
   width: calc((100% - 8px) / 3);
   border-radius: 7px;
   background: var(--raised);
-  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.07);
   transform: translateX(calc(var(--active-tab) * 100%));
   transition: transform 360ms var(--ease-fluid);
 }
 .filter-tabs button,
 .filter-tabs button[aria-pressed="true"] {
   background: transparent;
-  box-shadow: none;
   transition: color 220ms ease;
 }
 
