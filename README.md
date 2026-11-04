@@ -1,6 +1,6 @@
 # financeFlow
 
-Controle financeiro pessoal em Java, em evolução para um dashboard web. Esta primeira etapa oferece uma API com Spring Boot e persistência em PostgreSQL.
+Controle financeiro pessoal com dashboard em HTML, CSS e JavaScript, API Spring Boot e persistência em PostgreSQL.
 
 ## Requisitos
 
@@ -21,7 +21,20 @@ docker compose up -d --wait db
 
 No PowerShell, use `.\mvnw.cmd spring-boot:run`. Aguarde a mensagem `Started FinanceFlowApplication`. A API escuta na porta 8080, apenas na máquina local por padrão. A primeira execução cria a tabela automaticamente com o Flyway; as próximas validam o esquema sem apagar os registros.
 
-Esta versão substitui o menu do terminal pela API: as ações passam a ser feitas com requisições HTTP, que o futuro frontend também usará. Não são inseridas transações de exemplo no banco.
+Esta versão substitui o menu do terminal pela API: as ações passam a ser feitas com requisições HTTP, consumidas pelo dashboard. Não são inseridas transações de exemplo no banco.
+
+## Dashboard
+
+A página inicial oferece três vistas: visão geral, transações e análise. O dashboard usa valores reais, gráfico com séries selecionáveis, busca, filtros, tema claro/escuro, tipografia local, movimento suave com opção de pausa e cadastro, edição e exclusão de transações.
+
+Veja o [guia do dashboard](docs/dashboard.md), com captura de tela, instruções para Windows, atalhos e mapa de linhas para estudar os arquivos. Para editar os recursos diretamente durante o desenvolvimento:
+
+```powershell
+$env:PORT = "18081"
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.addResources=true"
+```
+
+Abra `http://localhost:18081/`. As capturas no guia usam dados temporários de teste; seu banco não recebe exemplos automaticamente. A [revisão visual](docs/design-review.md) documenta a direção, as decisões de design e as verificações realizadas.
 
 ## Experimentar a API
 
@@ -53,6 +66,7 @@ O cadastro retorna HTTP **201**, o identificador gerado e o endereço do registr
 | GET | `/api/transactions/balance` | Retorna o saldo: receitas menos despesas |
 | PUT | `/api/transactions/{id}` | Edita uma transação existente |
 | DELETE | `/api/transactions/{id}` | Exclui uma transação existente |
+
 ```bash
 curl http://localhost:8080/api/transactions
 curl http://localhost:8080/api/transactions/1
@@ -129,4 +143,4 @@ java -jar target/financeflow-0.1.0-SNAPSHOT.jar
 
 ## Próximas etapas
 
-O dashboard seguirá o visual minimalista escuro com detalhes em ciano aprovado no conceito. Ainda serão construídos frontend, categorias, filtros, edição/exclusão e autenticação com separação dos dados de cada usuário. Esta etapa é uma base local de desenvolvimento; a versão para venda precisará desses recursos antes de ser publicada para clientes.
+Categorias, relatórios agregados, filtros e paginação no servidor para volumes maiores, autenticação com separação dos dados de cada usuário e preparação da publicação para clientes. O dashboard e o CRUD de transações já estão disponíveis para desenvolvimento local.

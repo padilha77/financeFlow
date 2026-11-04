@@ -1,0 +1,326 @@
+/* 01. Curvas e tempos compartilhados: o movimento acompanha a ação. */
+:root {
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* 02. Aurora azul: movimento perceptível, somente transform e opacity. */
+.ambient {
+  inset: -8vmax;
+  transform: translate3d(var(--ambient-x, 0px), var(--ambient-y, 0px), 0);
+  contain: strict;
+  will-change: transform;
+}
+.ambient span {
+  width: min(1000px, 85vw);
+  height: min(800px, 85vw);
+  filter: blur(48px);
+  will-change: transform, opacity;
+  animation: aurora-blue 18s var(--ease-soft) infinite alternate;
+}
+.ambient span:nth-child(1) {
+  right: -5%;
+  top: -12%;
+  background: radial-gradient(
+    ellipse,
+    rgba(53, 132, 255, 0.55),
+    rgba(40, 100, 225, 0.18) 50%,
+    transparent 74%
+  );
+  animation-delay: -5s;
+}
+.ambient span:nth-child(2) {
+  left: -12%;
+  top: 20%;
+  background: radial-gradient(
+    ellipse,
+    rgba(44, 153, 255, 0.34),
+    rgba(20, 88, 200, 0.13) 52%,
+    transparent 74%
+  );
+  animation-name: aurora-ice;
+  animation-duration: 22s;
+  animation-delay: -13s;
+}
+.ambient span:nth-child(3) {
+  right: 15%;
+  bottom: -24%;
+  background: radial-gradient(
+    ellipse,
+    rgba(72, 106, 245, 0.4),
+    rgba(42, 83, 210, 0.12) 52%,
+    transparent 74%
+  );
+  animation-name: aurora-deep;
+  animation-duration: 26s;
+  animation-delay: -18s;
+}
+html[data-theme="light"] .ambient {
+  opacity: 0.36;
+}
+html[data-page-hidden="true"] .ambient span,
+html:has(dialog[open]) .ambient span {
+  animation-play-state: paused;
+}
+@keyframes aurora-blue {
+  from {
+    transform: translate3d(-110px, -30px, 0) rotate(-12deg) scale(0.9);
+    opacity: 0.7;
+  }
+  to {
+    transform: translate3d(90px, 150px, 0) rotate(16deg) scale(1.2);
+    opacity: 1;
+  }
+}
+@keyframes aurora-ice {
+  from {
+    transform: translate3d(-70px, 100px, 0) scale(1.05);
+    opacity: 0.6;
+  }
+  to {
+    transform: translate3d(150px, -90px, 0) scale(1.25);
+    opacity: 1;
+  }
+}
+@keyframes aurora-deep {
+  from {
+    transform: translate3d(120px, 30px, 0) scale(0.9);
+    opacity: 0.65;
+  }
+  to {
+    transform: translate3d(-140px, -120px, 0) scale(1.22);
+    opacity: 1;
+  }
+}
+
+/* 03. Feedback discreto: contraste neutro; o movimento fica no fundo. */
+.panel {
+  position: relative;
+  isolation: isolate;
+}
+.panel-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.015);
+  transition: opacity 240ms ease;
+}
+.panel.is-pointer-inside > .panel-sheen {
+  opacity: 1;
+}
+html[data-theme="light"] .panel-sheen {
+  background: rgba(30, 70, 140, 0.012);
+}
+.button,
+.icon-button {
+  transition-timing-function: var(--ease-fluid);
+  transition-duration: 260ms;
+}
+.button:active:not(:disabled),
+.icon-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.96);
+  transition-duration: 100ms;
+}
+.nav-link {
+  transition:
+    background 280ms ease,
+    color 280ms ease,
+    border-color 280ms ease;
+}
+.orbit-progress {
+  transition: stroke-dashoffset 850ms var(--ease-fluid);
+}
+.bar-track > span {
+  transition: width 700ms var(--ease-fluid);
+}
+.chart-tooltip {
+  transition: left 120ms var(--ease-fluid);
+}
+.chart-point {
+  transition:
+    cx 120ms ease-out,
+    cy 120ms ease-out;
+}
+.transaction-row {
+  transition:
+    background 220ms ease,
+    border-color 220ms ease;
+}
+.type-picker span {
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+}
+.modal input:not([type="radio"]) {
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    background 200ms ease;
+}
+.modal input:not([type="radio"]):focus {
+  border-color: var(--accent);
+}
+
+/* 04. O indicador desliza entre filtros, inclusive pelo teclado. */
+.filter-tabs {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+  --active-tab: 0;
+}
+.filter-tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 3);
+  border-radius: 7px;
+  background: var(--raised);
+  transform: translateX(calc(var(--active-tab) * 100%));
+  transition: transform 360ms var(--ease-fluid);
+}
+.filter-tabs button,
+.filter-tabs button[aria-pressed="true"] {
+  background: transparent;
+  transition: color 220ms ease;
+}
+
+/* 05. Dialog nativo + starting-style: entrada e saída, com fallback imediato. */
+.modal {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition:
+    opacity 220ms ease,
+    transform 300ms var(--ease-fluid),
+    display 300ms allow-discrete,
+    overlay 300ms allow-discrete;
+}
+.modal[open] {
+  animation: none;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.modal:not([open]) {
+  pointer-events: none;
+}
+.modal::backdrop {
+  background: rgba(5, 12, 24, 0);
+  backdrop-filter: blur(0);
+  transition:
+    background 250ms ease,
+    backdrop-filter 250ms ease,
+    display 300ms allow-discrete,
+    overlay 300ms allow-discrete;
+}
+.modal[open]::backdrop {
+  background: rgba(5, 12, 24, 0.68);
+  backdrop-filter: blur(8px);
+}
+@starting-style {
+  .modal[open] {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  .modal[open]::backdrop {
+    background: rgba(5, 12, 24, 0);
+    backdrop-filter: blur(0);
+  }
+}
+.toast {
+  animation: none;
+}
+html[data-motion-ready="true"]
+  :is(
+    .intro,
+    .balance-card,
+    .stat-card,
+    .chart-card,
+    .insight-card,
+    .transactions-panel
+  ) {
+  animation: none;
+}
+
+/* 06. Troca de tema com View Transitions quando o navegador oferece suporte. */
+html.is-theme-switching * {
+  transition: none !important;
+}
+::view-transition-old(root) {
+  animation: theme-out 220ms ease both;
+}
+::view-transition-new(root) {
+  animation: theme-in 320ms ease both;
+}
+@keyframes theme-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes theme-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 07. Celular e acessibilidade: preferências têm prioridade sobre os efeitos. */
+@media (max-width: 760px) {
+  .ambient {
+    will-change: auto;
+  }
+  .ambient span {
+    filter: blur(48px);
+    animation-duration: 22s;
+  }
+  .ambient span:nth-child(1) {
+    width: 100vw;
+    height: 100vw;
+    right: -25%;
+    top: -10%;
+  }
+  .ambient span:nth-child(2) {
+    width: 100vw;
+    height: 120vw;
+    left: -30%;
+    top: 30%;
+  }
+  .ambient span:nth-child(3) {
+    width: 90vw;
+    height: 90vw;
+    right: -20%;
+    bottom: 5%;
+  }
+}
+html[data-motion="reduced"] {
+  scroll-behavior: auto;
+}
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+html[data-motion="reduced"] .ambient,
+html[data-motion="reduced"] .ambient span {
+  will-change: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+  .ambient,
+  .ambient span {
+    will-change: auto;
+  }
+}

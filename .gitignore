@@ -36,3 +36,6 @@ bin/
 ### Configuracoes locais do IntelliJ ###
 /.idea/
 /*.iml
+
+### Relatórios locais de avaliação visual ###
+/.taste-skill/
