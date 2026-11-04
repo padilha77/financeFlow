@@ -39,3 +39,7 @@ bin/
 
 ### Relatórios locais de avaliação visual ###
 /.taste-skill/
+
+# Configurações locais de agentes de IA
+.agents/
+skills-lock.json
