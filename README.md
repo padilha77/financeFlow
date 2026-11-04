@@ -1,6 +1,113 @@
 # financeFlow
 
-Controle financeiro pessoal com dashboard em HTML, CSS e JavaScript, API Spring Boot e persistência em PostgreSQL.
+Sistema de controle financeiro pessoal desenvolvido com Java, Spring Boot e PostgreSQL.
+
+O FinanceFlow é uma aplicação full stack criada para facilitar o gerenciamento de receitas, despesas e saldos financeiros por meio de um dashboard web interativo.
+
+O projeto foi desenvolvido com foco no aprendizado de desenvolvimento backend Java, arquitetura de APIs REST, persistência de dados, testes automatizados e boas práticas de programação.
+
+![Dashboard FinanceFlow](docs/images/dashboard.png)
+
+Interface do FinanceFlow com indicadores financeiros, gráficos e gerenciamento de transações.
+
+Tecnologias utilizadas
+
+   ## Backend
+
+- Java 25
+
+- Spring Boot
+
+- Spring Web
+
+- Spring Data JPA
+
+- Bean Validation
+
+- Banco de dados
+
+- PostgreSQL
+
+- Flyway
+
+     ## Frontend
+
+- HTML5
+
+- CSS3
+
+- JavaScript
+
+    ## Testes e ferramentas
+
+- JUnit
+
+- Maven
+
+- Docker Compose
+
+- Git e GitHub
+
+     ## Funcionalidades
+
+- Cadastro de receitas e despesas.
+
+- Edição e exclusão de transações.
+
+- Consulta do saldo financeiro.
+
+- Dashboard com indicadores e gráficos.
+
+- Filtros e pesquisa de transações.
+
+- Validação de valores financeiros.
+
+- Tratamento de erros na API.
+
+- Interface responsiva com tema claro e escuro.
+
+- Testes unitários e de integração.
+
+## Arquitetura do projeto
+
+A aplicação utiliza uma arquitetura organizada em camadas:
+
+Frontend (HTML, CSS e JavaScript)
+              |
+              v
+       API REST
+              |
+              v
+     Controller (Spring)
+              |
+              v
+     Service (Regras de negócio)
+              |
+              v
+     Repository (Spring Data JPA)
+              |
+              v
+       PostgreSQL
+
+Essa separação facilita a manutenção, os testes e a evolução do sistema.
+
+## Status do projeto
+
+- Em desenvolvimento
+
+O sistema já possui operações CRUD, persistência de dados, dashboard e testes automatizados.
+
+Melhorias planejadas:
+
+- Autenticação e autorização de usuários.
+
+- Categorias financeiras.
+
+- Relatórios financeiros.
+
+- Deploy para demonstração pública.
+
+Projeto desenvolvido para aprendizado prático de Java e construção de portfólio profissional.
 
 ## Requisitos
 
