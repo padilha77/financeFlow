@@ -113,5 +113,22 @@
       "warn": 0
     }
   ],
-  "artifact": "JAR executado, recursos estáticos comparados byte a byte"
+  "artifact": "JAR executado, recursos estáticos comparados byte a byte",
+  "blue_background_revision": {
+    "background_changed_pixels": 15738,
+    "background_sample_pixels": 28800,
+    "pause_verified": true,
+    "content_widths": {
+      "1920": 1728,
+      "1440": 1376,
+      "1024": 976,
+      "768": 720,
+      "390": 358,
+      "320": 288
+    },
+    "page_errors": [],
+    "motion_checks_passed": 10,
+    "interaction_checks_passed": 8,
+    "accessibility_audits_without_violations": 5
+  }
 }

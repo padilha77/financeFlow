@@ -39,7 +39,7 @@ Com a aplicação já iniciada com `addResources=true`, use **Ctrl + F5** no nav
 - Gráfico com abas para saldo, entradas e saídas acumuladas, com exploração pelo cursor e pelas setas.
 - Maior saída, média por saída e dias com movimento calculados na tela de análise.
 - Tema claro/escuro e ocultação de valores, com preferências salvas no navegador.
-- Fundo com auroras em movimento, profundidade sutil pelo cursor e transições nos filtros, gráfico, vistas e formulários.
+- Fundo azul com auroras em movimento, profundidade sutil pelo cursor e transições nos filtros, gráfico, vistas e formulários.
 - Botão para pausar animações; a preferência de movimento reduzido do sistema é respeitada automaticamente.
 - Atalho `N` para novo lançamento e `/` para buscar, quando o foco está fora de um campo.
 - Fonte Inter local e layout adaptado ao celular, com navegação compacta, formulários com foco e fechamento por Escape.
@@ -65,6 +65,9 @@ A [revisão visual](design-review.md) registra a direção da skill, as exceçõ
 Não é necessário instalar React, bibliotecas de gráficos, fontes ou outro servidor para executar esta versão.
 
 ## Camada de movimento
+
+O fundo azul tem ciclos de 18–26 segundos no desktop. O conteúdo pode ocupar até 1728 px nas telas grandes. O ícone de pausa no cabeçalho controla os movimentos; se mostrar o símbolo de play, clique para retomar. A preferência de movimento reduzido do sistema tem prioridade.
+
 
 O movimento fica separado em **`css/motion.css`** e **`js/motion.js`**. A ordem no HTML é importante: primeiro `styles.css`, depois `motion.css`; primeiro `motion.js`, depois `app.js` (ambos com `defer`).
 
@@ -92,20 +95,20 @@ No VS Code, use **Ctrl + G**, digite o número da linha e pressione Enter. As li
 | index.html | 451 | [05. A lista preserva busca, filtros, ordenação, paginação, edição e exclusão.](../src/main/resources/static/index.html#L451) |
 | index.html | 577 | [06. Formulário compartilhado por cadastro e edição.](../src/main/resources/static/index.html#L577) |
 | styles.css | 1 | [01. Inter local + tokens: um sistema de cores, medidas e tipografia.](../src/main/resources/static/css/styles.css#L1) |
-| styles.css | 198 | [02. Fundo aurora aprovado: textura e movimento ficam na camada de trás.](../src/main/resources/static/css/styles.css#L198) |
-| styles.css | 271 | [03. Moldura: marca, navegação e conteúdo compartilham a mesma coluna.](../src/main/resources/static/css/styles.css#L271) |
-| styles.css | 552 | [04. Indicadores: tipografia tabular, superfícies sem sombras e hierarquia clara.](../src/main/resources/static/css/styles.css#L552) |
-| styles.css | 667 | [05. Análise: linhas reais, eixos legíveis, exploração por cursor e teclado.](../src/main/resources/static/css/styles.css#L667) |
-| styles.css | 950 | [06. Histórico: valores alinhados, ações claras e paginação sem deslocamentos.](../src/main/resources/static/css/styles.css#L950) |
-| styles.css | 1218 | [07. Formulários: controles nativos, labels explícitos e foco preservado.](../src/main/resources/static/css/styles.css#L1218) |
-| styles.css | 1400 | [08. Tablet e celular: cada composição é adaptada, sem rolagem horizontal.](../src/main/resources/static/css/styles.css#L1400) |
+| styles.css | 199 | [02. Fundo aurora aprovado: textura e movimento ficam na camada de trás.](../src/main/resources/static/css/styles.css#L199) |
+| styles.css | 219 | [03. Moldura: marca, navegação e conteúdo compartilham a mesma coluna.](../src/main/resources/static/css/styles.css#L219) |
+| styles.css | 502 | [04. Indicadores: tipografia tabular, superfícies sem sombras e hierarquia clara.](../src/main/resources/static/css/styles.css#L502) |
+| styles.css | 617 | [05. Análise: linhas reais, eixos legíveis, exploração por cursor e teclado.](../src/main/resources/static/css/styles.css#L617) |
+| styles.css | 900 | [06. Histórico: valores alinhados, ações claras e paginação sem deslocamentos.](../src/main/resources/static/css/styles.css#L900) |
+| styles.css | 1168 | [07. Formulários: controles nativos, labels explícitos e foco preservado.](../src/main/resources/static/css/styles.css#L1168) |
+| styles.css | 1350 | [08. Tablet e celular: cada composição é adaptada, sem rolagem horizontal.](../src/main/resources/static/css/styles.css#L1350) |
 | motion.css | 1 | [01. Curvas e tempos compartilhados: o movimento acompanha a ação.](../src/main/resources/static/css/motion.css#L1) |
-| motion.css | 7 | [02. Aurora em camadas: só transform e opacity são animados continuamente.](../src/main/resources/static/css/motion.css#L7) |
-| motion.css | 138 | [03. Feedback discreto: contraste neutro; o movimento fica no fundo.](../src/main/resources/static/css/motion.css#L138) |
-| motion.css | 210 | [04. O indicador desliza entre filtros, inclusive pelo teclado.](../src/main/resources/static/css/motion.css#L210) |
-| motion.css | 238 | [05. Dialog nativo + starting-style: entrada e saída, com fallback imediato.](../src/main/resources/static/css/motion.css#L238) |
-| motion.css | 294 | [06. Troca de tema com View Transitions quando o navegador oferece suporte.](../src/main/resources/static/css/motion.css#L294) |
-| motion.css | 318 | [07. Celular e acessibilidade: preferências têm prioridade sobre os efeitos.](../src/main/resources/static/css/motion.css#L318) |
+| motion.css | 7 | [02. Aurora azul: movimento perceptível, somente transform e opacity.](../src/main/resources/static/css/motion.css#L7) |
+| motion.css | 96 | [03. Feedback discreto: contraste neutro; o movimento fica no fundo.](../src/main/resources/static/css/motion.css#L96) |
+| motion.css | 168 | [04. O indicador desliza entre filtros, inclusive pelo teclado.](../src/main/resources/static/css/motion.css#L168) |
+| motion.css | 196 | [05. Dialog nativo + starting-style: entrada e saída, com fallback imediato.](../src/main/resources/static/css/motion.css#L196) |
+| motion.css | 252 | [06. Troca de tema com View Transitions quando o navegador oferece suporte.](../src/main/resources/static/css/motion.css#L252) |
+| motion.css | 276 | [07. Celular e acessibilidade: preferências têm prioridade sobre os efeitos.](../src/main/resources/static/css/motion.css#L276) |
 | app.js | 3 | [01. Estado: os filtros ficam no navegador; os registros continuam no PostgreSQL.](../src/main/resources/static/js/app.js#L3) |
 | app.js | 81 | [02. Dinheiro: BigInt guarda centavos inteiros, inclusive para valores grandes.](../src/main/resources/static/js/app.js#L81) |
 | app.js | 224 | [03. Um mesmo conjunto de registros alimenta indicadores, gráfico e histórico.](../src/main/resources/static/js/app.js#L224) |

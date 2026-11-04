@@ -4,134 +4,92 @@
   --ease-soft: cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-/* 02. Aurora em camadas: só transform e opacity são animados continuamente. */
+/* 02. Aurora azul: movimento perceptível, somente transform e opacity. */
 .ambient {
-  inset: -7vmax;
+  inset: -8vmax;
   transform: translate3d(var(--ambient-x, 0px), var(--ambient-y, 0px), 0);
   contain: strict;
   will-change: transform;
 }
 .ambient span {
-  filter: blur(72px);
+  width: min(1000px, 85vw);
+  height: min(800px, 85vw);
+  filter: blur(48px);
   will-change: transform, opacity;
-  animation: aurora-mint 28s var(--ease-soft) infinite alternate;
+  animation: aurora-blue 18s var(--ease-soft) infinite alternate;
 }
 .ambient span:nth-child(1) {
-  width: min(780px, 70vw);
-  height: min(680px, 65vw);
-  right: -6%;
-  top: -19%;
-  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
+  right: -5%;
+  top: -12%;
+  background: radial-gradient(
     ellipse,
-    rgba(120, 191, 138, 0.25),
-    rgba(83, 139, 119, 0.09) 60%,
-    transparent 78%
+    rgba(53, 132, 255, 0.55),
+    rgba(40, 100, 225, 0.18) 50%,
+    transparent 74%
   );
-  animation-name: aurora-mint;
+  animation-delay: -5s;
 }
 .ambient span:nth-child(2) {
-  width: min(730px, 75vw);
-  height: min(640px, 70vw);
-  left: 9%;
-  top: 30%;
-  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
+  left: -12%;
+  top: 20%;
+  background: radial-gradient(
     ellipse,
-    rgba(67, 143, 139, 0.18),
-    rgba(76, 116, 144, 0.07) 60%,
-    transparent 80%
+    rgba(44, 153, 255, 0.34),
+    rgba(20, 88, 200, 0.13) 52%,
+    transparent 74%
   );
-  animation-name: aurora-teal;
-  animation-duration: 32s;
-  animation-delay: -11s;
+  animation-name: aurora-ice;
+  animation-duration: 22s;
+  animation-delay: -13s;
 }
 .ambient span:nth-child(3) {
-  width: min(680px, 70vw);
-  height: min(580px, 60vw);
-  bottom: -20%;
-  right: 5%;
-  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
+  right: 15%;
+  bottom: -24%;
+  background: radial-gradient(
     ellipse,
-    rgba(200, 141, 113, 0.2),
-    rgba(149, 111, 134, 0.06) 60%,
-    transparent 78%
+    rgba(72, 106, 245, 0.4),
+    rgba(42, 83, 210, 0.12) 52%,
+    transparent 74%
   );
-  animation-name: aurora-peach;
-  animation-duration: 35s;
+  animation-name: aurora-deep;
+  animation-duration: 26s;
   animation-delay: -18s;
 }
-html[data-theme="light"] .ambient span {
-  opacity: 0.55;
+html[data-theme="light"] .ambient {
+  opacity: 0.36;
 }
-html[data-theme="light"] .ambient span:nth-child(1) {
-  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
-    ellipse,
-    rgba(120, 191, 138, 0.14),
-    rgba(83, 139, 119, 0.04) 60%,
-    transparent 78%
-  );
-}
-html[data-theme="light"] .ambient span:nth-child(2) {
-  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
-    ellipse,
-    rgba(67, 143, 139, 0.1),
-    rgba(76, 116, 144, 0.04) 60%,
-    transparent 80%
-  );
-}
-html[data-theme="light"] .ambient span:nth-child(3) {
-  background: /* taste-skill-ignore: aurora animada preservada a pedido do usuário. */ radial-gradient(
-    ellipse,
-    rgba(200, 141, 113, 0.11),
-    rgba(149, 111, 134, 0.03) 60%,
-    transparent 78%
-  );
-}
-html[data-page-hidden="true"] .ambient span {
-  animation-play-state: paused;
-}
+html[data-page-hidden="true"] .ambient span,
 html:has(dialog[open]) .ambient span {
   animation-play-state: paused;
 }
-@keyframes aurora-mint {
-  0% {
-    transform: translate3d(-20px, -15px, 0) rotate(-8deg) scale(0.94);
-    opacity: 0.75;
-  }
-  50% {
-    transform: translate3d(-95px, 60px, 0) rotate(6deg) scale(1.08);
-    opacity: 1;
-  }
-  100% {
-    transform: translate3d(10px, 100px, 0) rotate(13deg) scale(1.15);
-    opacity: 0.85;
-  }
-}
-@keyframes aurora-teal {
-  0% {
-    transform: translate3d(-55px, 25px, 0) rotate(4deg) scale(1);
+@keyframes aurora-blue {
+  from {
+    transform: translate3d(-110px, -30px, 0) rotate(-12deg) scale(0.9);
     opacity: 0.7;
   }
-  50% {
-    transform: translate3d(60px, -65px, 0) rotate(-9deg) scale(1.16);
-    opacity: 0.95;
-  }
-  100% {
-    transform: translate3d(100px, 55px, 0) rotate(5deg) scale(0.98);
-    opacity: 0.8;
-  }
-}
-@keyframes aurora-peach {
-  0% {
-    transform: translate3d(45px, 40px, 0) scale(1);
-    opacity: 0.65;
-  }
-  50% {
-    transform: translate3d(-70px, -40px, 0) scale(1.14);
+  to {
+    transform: translate3d(90px, 150px, 0) rotate(16deg) scale(1.2);
     opacity: 1;
   }
-  100% {
-    transform: translate3d(-95px, 35px, 0) scale(0.96);
-    opacity: 0.8;
+}
+@keyframes aurora-ice {
+  from {
+    transform: translate3d(-70px, 100px, 0) scale(1.05);
+    opacity: 0.6;
+  }
+  to {
+    transform: translate3d(150px, -90px, 0) scale(1.25);
+    opacity: 1;
+  }
+}
+@keyframes aurora-deep {
+  from {
+    transform: translate3d(120px, 30px, 0) scale(0.9);
+    opacity: 0.65;
+  }
+  to {
+    transform: translate3d(-140px, -120px, 0) scale(1.22);
+    opacity: 1;
   }
 }
 
@@ -154,7 +112,7 @@ html:has(dialog[open]) .ambient span {
   opacity: 1;
 }
 html[data-theme="light"] .panel-sheen {
-  background: rgba(25, 50, 30, 0.012);
+  background: rgba(30, 70, 140, 0.012);
 }
 .button,
 .icon-button {
@@ -254,7 +212,7 @@ html[data-theme="light"] .panel-sheen {
   pointer-events: none;
 }
 .modal::backdrop {
-  background: rgba(5, 14, 13, 0);
+  background: rgba(5, 12, 24, 0);
   backdrop-filter: blur(0);
   transition:
     background 250ms ease,
@@ -263,7 +221,7 @@ html[data-theme="light"] .panel-sheen {
     overlay 300ms allow-discrete;
 }
 .modal[open]::backdrop {
-  background: rgba(5, 14, 13, 0.68);
+  background: rgba(5, 12, 24, 0.68);
   backdrop-filter: blur(8px);
 }
 @starting-style {
@@ -272,7 +230,7 @@ html[data-theme="light"] .panel-sheen {
     transform: translateY(16px) scale(0.98);
   }
   .modal[open]::backdrop {
-    background: rgba(5, 14, 13, 0);
+    background: rgba(5, 12, 24, 0);
     backdrop-filter: blur(0);
   }
 }
@@ -322,7 +280,7 @@ html.is-theme-switching * {
   }
   .ambient span {
     filter: blur(48px);
-    animation-duration: 38s;
+    animation-duration: 22s;
   }
   .ambient span:nth-child(1) {
     width: 100vw;

@@ -6,7 +6,7 @@ O aprimoramento mantém HTML, CSS, JavaScript nativos, a API Spring Boot, o Post
 
 Aplicada a skill [design-taste-frontend](https://github.com/Leonxlnx/taste-skill), no fluxo específico para aplicativos. Direção **True-black flat**, seed **1458210553**, escolhida entre as duas opções compatíveis com o tema escuro. Não houve novo sorteio. A tipografia é **Inter**, hospedada no próprio projeto; [licença SIL OFL 1.1](../src/main/resources/static/fonts/OFL-Inter.txt), compatível com uso comercial.
 
-O elemento de identidade é o caminho do dinheiro: saldo em destaque, linha acumulada explorável e órbita de economia calculada sobre as receitas. Superfícies neutras e controles em branco deixam verde e pêssego para os dados financeiros. O fundo preserva os tons já aprovados.
+O elemento de identidade é o caminho do dinheiro: saldo em destaque, linha acumulada explorável e órbita de economia calculada sobre as receitas. Superfícies neutras e controles em branco deixam azul e pêssego para os dados financeiros. O fundo preserva os tons já aprovados.
 
 Exceções explícitas: a aurora, seus gradientes e o movimento contínuo foram pedidos pelo usuário e prevalecem sobre a regra de fundo plano da skill. A inspeção usa somente `--allow gradient`; o lint anota essa mesma exceção nas funções CSS que desenham o fundo. O desfoque fica no fundo da janela modal, para separar o formulário da página. Não há desfoque nem sombras em cards. As cores do tema, curvas suaves e contraste de elevação foram adaptados à identidade existente.
 
@@ -38,7 +38,7 @@ A navegação atualiza o endereço e funciona com voltar/avançar. Os filtros pe
 ### Avaliação do aplicativo, pelas sete perguntas da skill
 
 1. **Resposta principal:** o saldo é a maior cifra; a tela de transações prioriza registros e a análise prioriza o gráfico.
-2. **Composição:** marca, navegação e conteúdo usam uma coluna de até 1208 px; margens iguais, intervalos de 12–16 px e painéis que acompanham seu conteúdo.
+2. **Composição:** marca, navegação e conteúdo usam uma coluna de até 1728 px; margens iguais, intervalos de 12–16 px e painéis que acompanham seu conteúdo.
 3. **Identidade e cores:** números e gráfico carregam o acento; controles e navegação permanecem neutros. A aurora é a exceção aprovada.
 4. **Consistência:** indicadores, gráfico e economia derivam dos mesmos registros filtrados por período. As repetições no comparativo conferem com os indicadores. A média arredonda os centavos inteiros.
 5. **Zeros e ausências:** saldo e totais vazios são zero; média, maior saída e percentual sem base são traços. Contagens nomeiam lançamentos e dias.
@@ -77,3 +77,9 @@ Receitas: Salário, Freelance · identidade visual e Reembolso. Despesas: Mercad
 
 
 A avaliação automatizada de acessibilidade não substitui testes humanos com leitores de tela. O acabamento visual é uma etapa do produto: autenticação, isolamento entre usuários e preparação para implantação comercial continuam no planejamento do projeto.
+
+## Ajuste solicitado: azul e fundo com mais presença
+
+O usuário substituiu a preferência pelo verde por uma paleta azul. Essa escolha prevalece sobre a direção inicial da skill: superfícies azul-escuras, marca, gráfico e indicadores em azul. A aurora usa três camadas com ciclos de 18, 22 e 26 segundos, com cores mais presentes e deslocamento suave. Ela fica acima do fundo do body e abaixo do conteúdo, sem interferir nos cliques. A pausa manual, a pausa com modal aberto e a preferência de movimento reduzido continuam funcionando.
+
+A coluna ocupa 1376 px em uma tela de 1440 px e 1728 px em uma tela de 1920 px, preservando os layouts de tablet e celular. Na comparação de capturas separadas por três segundos, 15738 dos 28800 pixels de uma faixa de fundo apresentaram mudança perceptível. A pausa e seis larguras também foram verificadas no Chromium. Os valores das capturas continuam sendo dados temporários de teste.
