@@ -119,7 +119,8 @@ No IntelliJ, abra o arquivo `pom.xml` como projeto Maven e selecione o JDK 25. A
 
 ## Executar localmente
 
-Na pasta do projeto:
+Na pasta do projeto, defina `DB_PASSWORD` e `TEST_DB_PASSWORD` com senhas locais distintas no ambiente do terminal. No IntelliJ, configure as mesmas variáveis na configuração de execução. Não coloque senhas no código ou em commits.
+
 
 ```bash
 docker compose up -d --wait db
@@ -227,11 +228,11 @@ O fluxo é **requisição → controller → service → repository → PostgreS
 | --- |-------------------------------------------------| --- |
 | `DB_URL` | `jdbc:postgresql://localhost:15432/financeflow` | Conexão JDBC da aplicação |
 | `DB_USER` | `financeflow`                                   | Usuário do banco |
-| `DB_PASSWORD` | `financeflow_dev`                               | Senha de desenvolvimento |
+| `DB_PASSWORD` | obrigatória, sem valor padrão                               | Senha de desenvolvimento |
 | `PORT` | `8080`                                          | Porta da API |
-| `SERVER_ADDRESS` | `127.0.0.1`                                     | Interface de rede da API |
+| Endereço local | `127.0.0.1`                                     | Interface de rede da API |
 
-As credenciais padrão são exclusivas para desenvolvimento local. Para alterá-las, exporte as variáveis no terminal antes de iniciar tanto o Compose quanto a aplicação. Um arquivo `.env` é lido pelo Compose, mas não é carregado automaticamente pelo Spring Boot. Não versione credenciais reais.
+As senhas do banco principal (`DB_PASSWORD`) e de testes (`TEST_DB_PASSWORD`) são obrigatórias e não possuem valor padrão. Defina ambas no ambiente antes de iniciar o Compose e use a variável correspondente ao executar a aplicação ou os testes. Um arquivo `.env` é lido pelo Compose, mas não é carregado automaticamente pelo Spring Boot. Não versione credenciais reais.
 
 O volume Docker `postgres_data` preserva os dados ao parar o banco. Para encerrar:
 
@@ -251,3 +252,13 @@ java -jar target/financeflow-0.1.0-SNAPSHOT.jar
 ## Próximas etapas
 
 Categorias, relatórios agregados, filtros e paginação no servidor para volumes maiores, autenticação com separação dos dados de cada usuário e preparação da publicação para clientes. O dashboard e o CRUD de transações já estão disponíveis para desenvolvimento local.
+
+## Segurança e limites de uso
+
+Esta versão é uma aplicação de estudo para uso local, sem autenticação ou autorização. O servidor e as portas Docker permanecem vinculados a `127.0.0.1`; não exponha por proxy, túnel ou redirecionamento de portas. Ocultar valores no dashboard é apenas um recurso visual, não controle de acesso.
+
+Para uma versão pública, implemente autenticação, autorização e HTTPS antes do deploy. Não use dados financeiros reais em demonstrações públicas.
+
+As senhas antigas de desenvolvimento continuam no histórico: não as reutilize. Se seu volume PostgreSQL já foi inicializado, mudar uma variável não troca a senha existente. Altere a senha do usuário no PostgreSQL e configure o mesmo valor no ambiente; preserve o volume e faça backup antes de qualquer manutenção.
+
+O Dependabot está configurado para propor atualizações Maven semanalmente. Revise e teste as propostas; isso não substitui uma auditoria de vulnerabilidades.
