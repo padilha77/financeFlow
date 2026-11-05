@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: financeflow
       POSTGRES_USER: ${DB_USER:-financeflow}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-financeflow_dev}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no ambiente}
     ports:
       - "127.0.0.1:15432:5432"
     volumes:
@@ -20,7 +20,7 @@ services:
     environment:
       POSTGRES_DB: financeflow_test
       POSTGRES_USER: financeflow_test
-      POSTGRES_PASSWORD: financeflow_test
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:?Defina TEST_DB_PASSWORD no ambiente}
     ports:
       - "127.0.0.1:5433:5432"
     tmpfs:
