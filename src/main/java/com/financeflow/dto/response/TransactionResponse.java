@@ -1,4 +1,7 @@
-package com.financeflow.transaction;
+package com.financeflow.dto.response;
+
+import com.financeflow.enums.TransactionType;
+import com.financeflow.transaction.Transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
