@@ -1,6 +1,8 @@
 package com.financeflow.transaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeflow.enums.TransactionType;
+import com.financeflow.repository.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -34,7 +36,8 @@ class TransactionApiIT {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper mapper;
     @Autowired EntityManager entityManager;
-    @Autowired TransactionRepository repository;
+    @Autowired
+    TransactionRepository repository;
 
     @Test
     void deveCadastrarConsultarEListarTransacaoNoPostgres()

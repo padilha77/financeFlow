@@ -1,4 +1,4 @@
-package com.financeflow.transaction;
+package com.financeflow.exceptions;
 
 public class TransactionNotFoundException extends RuntimeException {
     public TransactionNotFoundException(Long id) {

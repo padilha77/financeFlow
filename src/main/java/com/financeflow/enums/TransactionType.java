@@ -1,4 +1,4 @@
-package com.financeflow.transaction;
+package com.financeflow.enums;
 
 public enum TransactionType {
     RECEITA,

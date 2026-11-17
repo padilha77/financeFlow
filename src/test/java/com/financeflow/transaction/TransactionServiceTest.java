@@ -1,6 +1,10 @@
 package com.financeflow.transaction;
 
 
+import com.financeflow.enums.TransactionType;
+import com.financeflow.exceptions.TransactionNotFoundException;
+import com.financeflow.repository.TransactionRepository;
+import com.financeflow.service.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,8 +21,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceTest {
-    @Mock TransactionRepository repository;
-    @InjectMocks TransactionService service;
+    @Mock
+    TransactionRepository repository;
+    @InjectMocks
+    TransactionService service;
 
     @Test
     void deveAdicionarUmaTransacao() {

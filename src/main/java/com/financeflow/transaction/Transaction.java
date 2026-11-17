@@ -1,5 +1,6 @@
 package com.financeflow.transaction;
 
+import com.financeflow.enums.TransactionType;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;

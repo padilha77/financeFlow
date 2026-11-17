@@ -1,6 +1,5 @@
-package com.financeflow.shared;
+package com.financeflow.exceptions;
 
-import com.financeflow.transaction.TransactionNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;

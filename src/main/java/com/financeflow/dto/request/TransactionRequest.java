@@ -1,5 +1,7 @@
-package com.financeflow.transaction;
+package com.financeflow.dto.request;
 
+import com.financeflow.enums.TransactionType;
+import com.financeflow.transaction.Transaction;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
